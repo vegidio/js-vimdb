@@ -1,0 +1,36 @@
+{
+    "name": "template-typescript",
+    "version": "1.0.0",
+    "main": "src/index.ts",
+    "license": "MIT",
+    "dependencies": {
+        "@types/config": "latest",
+        "config": "latest",
+        "winston": "latest"
+    },
+    "devDependencies": {
+        "@types/copy-webpack-plugin": "latest",
+        "@types/jest": "latest",
+        "@types/node": "latest",
+        "@types/webpack": "latest",
+        "@types/webpack-node-externals": "latest",
+        "@typescript-eslint/eslint-plugin": "latest",
+        "@typescript-eslint/parser": "latest",
+        "copy-webpack-plugin": "latest",
+        "eslint": "latest",
+        "jest": "latest",
+        "ts-jest": "latest",
+        "ts-loader": "latest",
+        "ts-node": "latest",
+        "typescript": "latest",
+        "webpack": "latest",
+        "webpack-cli": "latest",
+        "webpack-node-externals": "latest"
+    },
+    "scripts": {
+        "build": "yarn && webpack",
+        "lint": "yarn && eslint . --ext .ts",
+        "start": "yarn && ts-node .",
+        "test": "yarn && jest"
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 8080
+    },
+    "parse": {
+        "host": "https://parse.com/app/foo",
+        "appId": "foo"
+    },
+    "rabbitmq": {
+        "host": "rabbitmq.com",
+        "username": "username",
+        "password": "password"
+    },
+    "cron": {
+        "createShows": "*/30 * 0 * * *"
+    }
+}

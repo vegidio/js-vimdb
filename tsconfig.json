@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "lib": [ "es2019" ],
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "outDir": "./build/",
+        "sourceMap": true,
+        "target": "es6"
+    }
+}
