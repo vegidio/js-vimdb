@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: '0 12 * * *'
 
 jobs:
   push:
@@ -20,8 +20,10 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
-      - name: Testing & Building the template
+      - name: Build the package
         run: |
           yarn
-          yarn test
           yarn build
+
+      - name: Test the scraper
+        run: yarn test

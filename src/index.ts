@@ -1,7 +1,17 @@
-import * as config from 'config'
-import logger from './logger'
+import ImdbService from './services/imdb.service'
+import Show from './models/show.model'
 
-const serverConfig = config.util.toObject(config.get('server'))
+export { Show }
 
-const msg = `Server running on ${serverConfig.host}:${serverConfig.port}`
-logger.info(msg)
+export async function getShowById(identifier: string): Promise<Show> {
+    const imdb = new ImdbService()
+    return await imdb.fetchShowInfo(identifier)
+}
+
+export const vimdb = {
+    // Models
+    Show,
+
+    // Functions
+    getShowById
+}

@@ -1,36 +1,39 @@
 {
-    "name": "template-typescript",
-    "version": "1.0.0",
-    "main": "src/index.ts",
+    "name": "vimdb",
+    "version": "3.0.0",
+    "description": "Yet another IMDb Scraper",
+    "main": "vimdb.js",
+    "types": "src/index.d.ts",
+    "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "MIT",
     "dependencies": {
-        "@types/config": "latest",
-        "config": "latest",
-        "winston": "latest"
+        "@types/cheerio": "0.22.18",
+        "@types/node-fetch": "2.5.7",
+        "cheerio": "1.0.0-rc.3",
+        "node-fetch": "2.6.0"
     },
     "devDependencies": {
-        "@types/copy-webpack-plugin": "latest",
-        "@types/jest": "latest",
-        "@types/node": "latest",
-        "@types/webpack": "latest",
-        "@types/webpack-node-externals": "latest",
-        "@typescript-eslint/eslint-plugin": "latest",
-        "@typescript-eslint/parser": "latest",
-        "copy-webpack-plugin": "latest",
-        "eslint": "latest",
-        "jest": "latest",
-        "ts-jest": "latest",
-        "ts-loader": "latest",
-        "ts-node": "latest",
-        "typescript": "latest",
-        "webpack": "latest",
-        "webpack-cli": "latest",
-        "webpack-node-externals": "latest"
+        "@types/copy-webpack-plugin": "6.0.0",
+        "@types/jest": "26.0.0",
+        "@types/node": "14.0.13",
+        "@types/webpack": "4.41.17",
+        "@typescript-eslint/eslint-plugin": "3.4.0",
+        "@typescript-eslint/parser": "3.4.0",
+        "copy-webpack-plugin": "6.0.2",
+        "eslint": "7.3.1",
+        "file-type": "14.6.2",
+        "jest": "26.1.0",
+        "ts-jest": "26.1.1",
+        "ts-loader": "7.0.5",
+        "ts-node": "8.10.2",
+        "typescript": "3.9.5",
+        "webpack": "4.43.0",
+        "webpack-cli": "3.3.12"
     },
     "scripts": {
-        "build": "yarn && webpack",
-        "lint": "yarn && eslint . --ext .ts",
-        "start": "yarn && ts-node .",
-        "test": "yarn && jest"
+        "build": "webpack",
+        "lint": "eslint . --ext .ts",
+        "start": "npm install --only=prod && node .",
+        "test": "jest"
     }
 }

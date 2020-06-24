@@ -1,58 +1,98 @@
-# TypeScript (Template)
+# vegidio/vimdb
 
-[![Actions](https://github.com/vegidio/template-typescript/workflows/test/badge.svg)](https://github.com/vegidio/template-typescript/actions)
-[![MIT](https://img.shields.io/badge/license-MIT-blue)](https://choosealicense.com/licenses/mit/)
+[![Actions](https://github.com/vegidio/nodejs-vimdb/workflows/test/badge.svg)](https://github.com/vegidio/nodejs-vimdb/actions)
+[![npm](https://img.shields.io/npm/dt/vimdb.svg)](https://www.npmjs.com/package/vimdb)
+![TypeScript](https://img.shields.io/npm/types/vimdb.svg)
+[![Apache 2.0](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-A template project for TypeScript with the usual scripts to **run**, **lint**, **build** and **test** the source code.
+This package lets you get IMDb information from movies, series, etc without an API key.
+
+## ⚙️ Installation
+
+In your project root folder, enter the following command in the terminal:
+
+```
+$ yarn add vimdb
+```
+or, if you use NPM:
+
+```
+$ npm install vimdb
+```
 
 ## 🤖 Usage
 
-Clone the repository and in the project directory install its dependencies by running `yarn` in the terminal. Afterwards you can run the following scripts:
+### Get a show by ID
 
-- `yarn build`: to create an app bundle. The entry point is the file `./src/index.ts` and the resolving binary will be saved in `./build/app.bundle.js`.
-- `yarn lint`: to statically check the code with ESLint.
-- `yarn start`: to execute the code. The entry point is the file `.src/index.ts`.
-- `yarn test`: to run the tests specified in the folder `./test`.
+```javascript
+// Import the package in your script
+import * as vimdb from 'vimdb'
 
-## 🧩 Dependencies
+// Get the details of the show "The Simpsons"
+vimdb.getShowById('tt0096697')
+    .then(console.log)
 
-This template depends on a few Node packages in order to work. All dependencies under the __devDependencies__ scope are mandatory; the most notable ones are:
+// Get the cast (directors and actors) of the show "Better Call Saul"
+vimdb.getShowById('tt3032476')
+    .then(show => show.cast())
+    .then(console.log);
 
-- [eslint](https://www.npmjs.com/package/eslint): a tool for identifying and reporting problems in TypeScript code.
-- [jest](https://www.npmjs.com/package/jest): a JavaScript test framework.
-- [ts-node](https://www.npmjs.com/package/ts-node): a TypeScript execution environment.
-- [typescript](https://www.npmjs.com/package/typescript): the TypeScript language support.
-- [webpack](https://www.npmjs.com/package/webpack): a module bundler for JavaScript.
+// Get the list of episodes of the show "Game of Thrones"
+vimdb.getShowById('tt0944947')
+    .then(show => show.episodes())
+    .then(console.log);
 
-## 🗂 Directory Structure
-
-This project follows the directory structure below:
-
-```
-[root]
-  ├── build/
-  ├── src/
-  │   └── index.ts
-  └── test/
+// Get the full information (details, cast and episodes) of the show "Cobra Kai"
+vimdb.getShowById('tt7221388', true)
+    .then(console.log);
 ```
 
-where:
+And the response should be:
 
-- `build/`: is the directory containing the binaries created by the project. This folder is auto-generated and you shouldn't manually put any file here.
-- `src/`: is the directory where you will place the project code. The entry point of the project's execution is the file `index.ts`.
-- `test/`: is the directory where you will place your test scripts.
+```json
+{
+    "identifier": "tt0096697",
+    "seasons": 30,
+    "type": "tv_show",
+    "name": "Simpsons",
+    "alternateName": "The Simpsons",
+    "summary": "The satiric adventures of a working-class family in the misfit city of Springfield.",
+    "description": "This is an animated sitcom about the antics of a dysfunctional family. Homer is the oafish unhealthy beer loving father, Marge is the hardworking homemaker wife, Bart is the perpetual ten-year-old underachiever (and proud of it), Lisa is the unappreciated eight-year-old genius, and Maggie is the cute, pacifier loving silent infant.",
+    "contentRating": 7,
+    "duration": 22,
+    "genre": [
+        "Animation",
+        "Comedy"
+    ],
+    "year": 1989,
+    "aggregateRating": {
+        "ratingValue": 8.7,
+        "ratingCount": 312694
+    },
+    "recommended": [
+        { "identifier": "tt0121955", "name": "South Park" },
+        { "identifier": "tt0182576", "name": "Family Guy" },
+        { "identifier": "tt0149460", "name": "Futurama" },
+        { "identifier": "tt0397306", "name": "American Dad!" },
+        { "identifier": "tt0462538", "name": "The Simpsons Movie" },
+        { "identifier": "tt0098904", "name": "Seinfeld" },
+        { "identifier": "tt0460649", "name": "How I Met Your Mother" },
+        { "identifier": "tt0369179", "name": "Two and a Half Men" },
+        { "identifier": "tt0898266", "name": "The Big Bang Theory" },
+        { "identifier": "tt2861424", "name": "Rick and Morty" },
+        { "identifier": "tt0108778", "name": "Friends" },
+        { "identifier": "tt0285403", "name": "Scrubs" }
+    ],
+    "image": "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_UY1200_CR85,0,630,1200_AL_.jpg",
+    "url": "https://www.imdb.com/title/tt0096697"
+}
+```
 
-### Important Files
-
-- `.eslintrc`: ESLint configuration file; you can change the linting rules here.
-- `jest.config.js`: Jest configuration file; you can change the test parameters here.
-- `tsconfig.json`: TypeScript configuration file; you can change how TypeScript transpile the files here.
-- `types.d.ts`: File where you create the definitions for the JS modules that don't have TypeScript support.
-- `webpack.config.ts`: Webpack configuration file; you can change how the project bundle is created here.
+More examples can be found in the `test/` folder on [Github](https://github.com/vegidio/nodejs-vimdb/tree/master/test).
 
 ## 📝 License
 
-**TypeScript (Template)** is released under the MIT License. See [LICENSE](LICENSE.txt) for details.
+**vimdb** is released under the Apache License. See [LICENSE](https://github.com/vegidio/nodejs-vimdb/blob/master/LICENSE.txt) for details.
 
 ## 👨🏾‍💻 Author
 
