@@ -3,8 +3,8 @@ import Show from './models/show.model'
 
 export { Show }
 
-export async function getShowById(identifier: string): Promise<Show> {
-    const imdb = new ImdbService()
+export async function getShowById(identifier: string, debug = false): Promise<Show> {
+    const imdb = new ImdbService(debug)
     return await imdb.fetchShowInfo(identifier)
 }
 

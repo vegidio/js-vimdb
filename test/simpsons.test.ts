@@ -6,7 +6,7 @@ let show: vimdb.Show
 
 beforeAll(async () => {
     jest.setTimeout(60000)
-    show = await vimdb.getShowById('tt0096697')
+    show = await vimdb.getShowById('tt0096697', true)
 })
 
 describe('The Simpsons is correctly scraped', () =>

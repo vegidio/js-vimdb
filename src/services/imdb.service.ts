@@ -1,13 +1,24 @@
+import * as fs from 'fs'
 import fetch from 'node-fetch'
 import * as cheerio from 'cheerio'
 import Show from '../models/show.model'
 
 export default class ImdbService
 {
+    private readonly isDebugMode: boolean
+
+    constructor(debug = false)
+    {
+        this.isDebugMode = debug
+    }
+
     async fetchShowInfo(identifier: string): Promise<Show>
     {
         const html = await fetch(`https://www.imdb.com/title/${identifier}`)
             .then(response => response.text())
+
+        // Saves a copy of the HTML for debug purposes
+        if(this.isDebugMode) this.saveHtml(identifier, html)
         const $ = cheerio.load(html)
 
         const show = new Show()
@@ -28,6 +39,13 @@ export default class ImdbService
     }
 
     // region - Private functions
+    private saveHtml(filename: string, html: string)
+    {
+        const scrapDir = 'scraps'
+        if(!fs.existsSync(scrapDir)) fs.mkdirSync(scrapDir)
+        fs.writeFileSync(`${scrapDir}/${filename}.html`, html)
+    }
+
     private scrapOriginalTitle($: CheerioStatic): string
     {
         const el = $('div.originalTitle').html()
