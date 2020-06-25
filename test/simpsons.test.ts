@@ -1,8 +1,9 @@
 import fetch from 'node-fetch'
 import * as FileType from 'file-type'
 import * as vimdb from '../'
+import { Show, Reference } from '../'
 
-let show: vimdb.Show
+let show: Show
 
 beforeAll(async () => {
     jest.setTimeout(60000)
@@ -38,7 +39,7 @@ describe('The Simpsons is correctly scraped', () =>
 
     test('There are 12 recommendations and one is "Family Guy"', () => {
         expect(show.recommended.length).toEqual(12)
-        expect(show.recommended).toContainEqual({identifier: 'tt0182576', name: 'Family Guy'})
+        expect(show.recommended).toContainEqual(new Reference('tt0182576', 'Family Guy'))
     })
 
     test('Genres are "Animation" and "Comedy"', () => {
@@ -78,12 +79,12 @@ describe('The posters are scraped', () =>
 describe('The credits are correctly scraped', () =>
 {
     test('There are at least the directors Mike and Mark', () => {
-        expect(show.credits.directors).toContainEqual({identifier: 'nm0027214', name: 'Mike B. Anderson'})
-        expect(show.credits.directors).toContainEqual({identifier: 'nm0456658', name: 'Mark Kirkland'})
+        expect(show.credits.directors).toContainEqual(new Reference('nm0027214', 'Mike B. Anderson'))
+        expect(show.credits.directors).toContainEqual(new Reference('nm0456658', 'Mark Kirkland'))
     })
 
     test('There are at least the actors Hank and Nacy', () => {
-        expect(show.credits.cast).toContainEqual({identifier: 'nm0144657', name: 'Dan Castellaneta'})
-        expect(show.credits.cast).toContainEqual({identifier: 'nm0004813', name: 'Nancy Cartwright'})
+        expect(show.credits.cast).toContainEqual(new Reference('nm0144657', 'Dan Castellaneta'))
+        expect(show.credits.cast).toContainEqual(new Reference('nm0004813', 'Nancy Cartwright'))
     })
 })

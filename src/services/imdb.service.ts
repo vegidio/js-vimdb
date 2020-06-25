@@ -1,7 +1,9 @@
 import * as fs from 'fs'
 import fetch from 'node-fetch'
 import * as cheerio from 'cheerio'
+
 import Show from '../models/show.model'
+import Reference from '../models/reference.model'
 
 export default class ImdbService
 {
@@ -109,9 +111,9 @@ export default class ImdbService
         return { small: small, big: big }
     }
 
-    private scrapRecommended($: CheerioStatic): { identifier: string, name: string }[]
+    private scrapRecommended($: CheerioStatic): Reference[]
     {
-        const shows: { identifier: string, name: string }[] = []
+        const shows: Reference[] = []
         $('div.rec_item').each((_, el) => {
             shows.push({
                 identifier: $(el).attr('data-tconst'),
@@ -124,9 +126,9 @@ export default class ImdbService
     // endregion
 
     // region - Show Credits
-    private scrapDirectors($: CheerioStatic): { identifier: string, name: string }[]
+    private scrapDirectors($: CheerioStatic): Reference[]
     {
-        const directors: { identifier: string, name: string }[] = []
+        const directors: Reference[] = []
         $('#fullcredits_content > h4')
             .filter((_, el) => $(el).text().includes('Directed'))
             .next('table')
@@ -141,9 +143,9 @@ export default class ImdbService
         return directors
     }
 
-    private scrapCast($: CheerioStatic): { identifier: string, name: string }[]
+    private scrapCast($: CheerioStatic): Reference[]
     {
-        const cast: { identifier: string, name: string }[] = []
+        const cast: Reference[] = []
         $('table[class="cast_list"]')
             .find('td:not([class]) > a')
             .each((_, el) => {

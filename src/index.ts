@@ -1,7 +1,8 @@
 import ImdbService from './services/imdb.service'
 import Show from './models/show.model'
+import Reference from './models/reference.model'
 
-export { Show }
+export { Show, Reference }
 
 export async function getShowById(identifier: string, debug = false): Promise<Show> {
     const imdb = new ImdbService(debug)
@@ -27,6 +28,7 @@ export async function getAllShowDataById(identifier: string, debug = false): Pro
 export const vimdb = {
     // Models
     Show,
+    Reference,
 
     // Functions
     getShowById,

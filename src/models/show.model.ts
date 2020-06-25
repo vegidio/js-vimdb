@@ -1,3 +1,5 @@
+import Reference from './reference.model'
+
 export default class Show
 {
     identifier: string
@@ -11,13 +13,13 @@ export default class Show
     aggregateRating: { ratingValue: number, ratingCount: number }
     genre: string[]
     poster: { small: string, big: string }
-    recommended: { identifier: string, name: string }[]
+    recommended: Reference[]
     contentRating: number
     year: number
 
     credits: {
-        directors: { identifier: string, name: string }[],
-        cast: { identifier: string, name: string }[]
+        directors: Reference[],
+        cast: Reference[]
     }
 
     static fromObject(obj: unknown): Show
