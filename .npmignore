@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Except...
+!lib/**/*
+!package.json
+!README.md
+!LICENSE.txt

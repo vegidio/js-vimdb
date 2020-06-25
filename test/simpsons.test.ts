@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import * as FileType from 'file-type'
-import * as vimdb from '../lib'
+import * as vimdb from '../'
 
 let show: vimdb.Show
 

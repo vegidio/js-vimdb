@@ -1,11 +1,13 @@
-name: test
+name: build
 
 on:
-  schedule:
-    - cron: '0 10 * * *'
+  push:
+    branches:
+      - master
 
 jobs:
   push:
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -27,9 +29,7 @@ jobs:
       - name: Test the scraper
         run: yarn test
 
-      - name: Create artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: scraps
-          path: scraps/
+      - name: Upload package to the registry
+        run: |
+          yarn version --no-git-tag-version --patch
+          yarn publish --non-interactive
