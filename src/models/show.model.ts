@@ -14,7 +14,7 @@ export default class Show
     genre: string[]
     poster: { small: string, big: string }
     recommended: Reference[]
-    contentRating: number
+    contentRating: string
     year: number
 
     credits: {

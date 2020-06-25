@@ -1,6 +1,6 @@
 {
     "name": "vimdb",
-    "version": "3.1.1",
+    "version": "3.2.0",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "MIT",
@@ -8,6 +8,7 @@
     "types": "lib/src/index.d.ts",
     "devDependencies": {
         "@types/cheerio": "0.22.18",
+        "@types/html-entities": "1.2.16",
         "@types/jest": "26.0.0",
         "@types/node": "14.0.13",
         "@types/node-fetch": "2.5.7",
@@ -17,6 +18,7 @@
         "cheerio": "1.0.0-rc.3",
         "eslint": "7.3.1",
         "file-type": "14.6.2",
+        "html-entities": "1.3.1",
         "jest": "26.1.0",
         "node-fetch": "2.6.0",
         "ts-jest": "26.1.1",
@@ -29,7 +31,13 @@
     "scripts": {
         "build": "webpack",
         "lint": "eslint . --ext .ts",
-        "start": "npm install --only=prod && node .",
         "test": "jest"
-    }
+    },
+    "keywords": [
+        "imdb",
+        "typescript",
+        "scraper",
+        "movies",
+        "series"
+    ]
 }

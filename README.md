@@ -26,33 +26,31 @@ $ npm install vimdb
 
 ```javascript
 // Import the package in your script
-import * as vimdb from 'vimdb'
+import Imdb from 'vimdb'
+const imdb = new Imdb('en')
 
 // Get the details of the show "The Simpsons"
-vimdb.getShowById('tt0096697')
+imdb.getShowById('tt0096697')
     .then(console.log)
 
-// Get the cast (directors and actors) of the show "Better Call Saul"
-vimdb.getShowById('tt3032476')
-    .then(show => show.cast())
-    .then(console.log);
+// Get the credits (directors and actors) of the show "Better Call Saul"
+imdb.getShowCreditsById('tt3032476')
+    .then(show => console.log(show.credits))
 
 // Get the list of episodes of the show "Game of Thrones"
-vimdb.getShowById('tt0944947')
-    .then(show => show.episodes())
-    .then(console.log);
+imdb.getShowEpisodesById('tt0944947')
+    .then(show => console.log(show.episodes))
 
-// Get the full information (details, cast and episodes) of the show "Cobra Kai"
-vimdb.getShowById('tt7221388', true)
+// Get the all information (details, credits and episodes) of the show "Cobra Kai"
+imdb.getAllShowData('tt7221388')
     .then(console.log);
 ```
 
-And the response should be:
+And the response should be something similar to this:
 
 ```json
 {
     "identifier": "tt0096697",
-    "seasons": 30,
     "type": "tv_show",
     "name": "Simpsons",
     "alternateName": "The Simpsons",
@@ -83,7 +81,10 @@ And the response should be:
         { "identifier": "tt0108778", "name": "Friends" },
         { "identifier": "tt0285403", "name": "Scrubs" }
     ],
-    "image": "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_UY1200_CR85,0,630,1200_AL_.jpg",
+    "poster": {
+        "small": "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_UX182_CR0,0,182,268_AL_.jpg",
+        "big": "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SY1000_CR0,0,666,1000_AL_.jpg"
+     },
     "url": "https://www.imdb.com/title/tt0096697"
 }
 ```

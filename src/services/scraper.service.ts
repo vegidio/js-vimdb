@@ -1,22 +1,30 @@
 import * as fs from 'fs'
-import fetch from 'node-fetch'
+import fetch, { Headers} from 'node-fetch'
 import * as cheerio from 'cheerio'
+import { AllHtmlEntities } from 'html-entities'
 
 import Show from '../models/show.model'
 import Reference from '../models/reference.model'
 
-export default class ImdbService
+export default class ScraperService
 {
+    private readonly language: string
     private readonly isDebugMode: boolean
+    private readonly headers: Headers
+    private readonly entities: AllHtmlEntities
 
-    constructor(debug = false)
+    constructor(language: string, debug: boolean)
     {
+        this.language = language
         this.isDebugMode = debug
+        this.headers = new Headers({ 'Accept-Language': language })
+        this.entities = new AllHtmlEntities()
     }
 
     async fetchShowInfo(identifier: string): Promise<Show>
     {
-        const html = await fetch(`https://www.imdb.com/title/${identifier}`)
+        const html = await fetch(`https://www.imdb.com/title/${identifier}`,
+            { headers: this.headers })
             .then(response => response.text())
 
         // Saves a copy of the HTML for debug purposes
@@ -30,9 +38,9 @@ export default class ImdbService
         show.name = $('div.title_wrapper').find('h1').text().trim()
         show.summary = $('div.summary_text').text().trim()
         show.description = $('div#titleStoryLine').find('span:not([class])').html().trim()
-        show.contentRating = Number($('div.subtext').text().match(/[0-9]{1,2}/))
         show.year = Number($('a[title="See more release dates"]').text().match(/[0-9]{4}/)[0])
-        show.alternativeName = this.scrapOriginalTitle($)
+        show.contentRating = this.scrapContentRating($)
+        show.alternativeName = this.scrapAlternativeTitle($)
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
         show.genre = this.scrapGenre($)
@@ -44,11 +52,12 @@ export default class ImdbService
 
     async fetchShowCredits(identifier: string): Promise<Show>
     {
-        const html = await fetch(`https://www.imdb.com/title/${identifier}/fullcredits`)
+        const html = await fetch(`https://www.imdb.com/title/${identifier}/fullcredits`,
+            { headers: this.headers })
             .then(response => response.text())
 
         // Saves a copy of the HTML for debug purposes
-        if(this.isDebugMode) this.saveHtml(identifier, html)
+        if(this.isDebugMode) this.saveHtml(`${identifier}_credits`, html)
         const $ = cheerio.load(html)
 
         const show = new Show()
@@ -60,18 +69,24 @@ export default class ImdbService
         return show
     }
 
-    // region - Show Info
     private saveHtml(filename: string, html: string)
     {
         const scrapDir = 'scraps'
         if(!fs.existsSync(scrapDir)) fs.mkdirSync(scrapDir)
-        fs.writeFileSync(`${scrapDir}/${filename}.html`, html)
+        fs.writeFileSync(`${scrapDir}/${filename}_${this.language}.html`, html)
     }
 
-    private scrapOriginalTitle($: CheerioStatic): string
+    // region - Show Info
+    private scrapAlternativeTitle($: CheerioStatic): string
     {
         const el = $('div.originalTitle').html()
-        return el ? el.match(/(.+)<span/)[1] : undefined
+        return el ? this.entities.decode(el.match(/(.+)<span/)[1]) : undefined
+    }
+
+    private scrapContentRating($: CheerioStatic): string
+    {
+        const group = $('div.subtext').html().trim().match(/(.*)\n/)
+        return group ? group[1] : undefined
     }
 
     private scrapDuration($: CheerioStatic): number
@@ -83,9 +98,10 @@ export default class ImdbService
     private scrapRating($: CheerioStatic): { ratingValue: number, ratingCount: number }
     {
         return {
-            ratingValue: Number($('span[itemprop="ratingValue"]').text()),
+            ratingValue: Number($('span[itemprop="ratingValue"]').text()
+                .replace(',', '.')),
             ratingCount: Number($('span[itemprop="ratingCount"]').text()
-                .replace(',', ''))
+                .replace(/[,.]/, ''))
         }
     }
 
@@ -115,9 +131,12 @@ export default class ImdbService
     {
         const shows: Reference[] = []
         $('div.rec_item').each((_, el) => {
+            let name = $(el).find('img').attr('title')
+            if (!name) name = $(el).find('div[class="gen_pane"]').text().trim()
+
             shows.push({
                 identifier: $(el).attr('data-tconst'),
-                name: $(el).find('img').attr('title')
+                name: name
             })
         })
 
