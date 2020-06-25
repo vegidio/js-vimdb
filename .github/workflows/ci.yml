@@ -31,5 +31,4 @@ jobs:
 
       - name: Upload package to the registry
         run: |
-          yarn version --no-git-tag-version --patch
           yarn publish --non-interactive

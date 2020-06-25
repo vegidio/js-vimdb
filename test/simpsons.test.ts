@@ -6,7 +6,7 @@ let show: vimdb.Show
 
 beforeAll(async () => {
     jest.setTimeout(60000)
-    show = await vimdb.getShowById('tt0096697', true)
+    show = await vimdb.getAllShowDataById('tt0096697', true)
 })
 
 describe('The Simpsons is correctly scraped', () =>
@@ -44,6 +44,14 @@ describe('The Simpsons is correctly scraped', () =>
     test('Genres are "Animation" and "Comedy"', () => {
         expect(show.genre).toEqual(['Animation', 'Comedy'])
     })
+
+    test('The content rating is a number', () => {
+        expect(show.contentRating).not.toBeNaN()
+    })
+
+    test('The release year is 1989', () => {
+        expect(show.year).toEqual(1989)
+    })
 })
 
 describe('The posters are scraped', () =>
@@ -64,5 +72,18 @@ describe('The posters are scraped', () =>
             .then(fileType => {
                 expect(fileType.mime).toEqual('image/jpeg')
             })
+    })
+})
+
+describe('The credits are correctly scraped', () =>
+{
+    test('There are at least the directors Mike and Mark', () => {
+        expect(show.credits.directors).toContainEqual({identifier: 'nm0027214', name: 'Mike B. Anderson'})
+        expect(show.credits.directors).toContainEqual({identifier: 'nm0456658', name: 'Mark Kirkland'})
+    })
+
+    test('There are at least the actors Hank and Nacy', () => {
+        expect(show.credits.cast).toContainEqual({identifier: 'nm0144657', name: 'Dan Castellaneta'})
+        expect(show.credits.cast).toContainEqual({identifier: 'nm0004813', name: 'Nancy Cartwright'})
     })
 })

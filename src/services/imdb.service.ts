@@ -28,6 +28,8 @@ export default class ImdbService
         show.name = $('div.title_wrapper').find('h1').text().trim()
         show.summary = $('div.summary_text').text().trim()
         show.description = $('div#titleStoryLine').find('span:not([class])').html().trim()
+        show.contentRating = Number($('div.subtext').text().match(/[0-9]{1,2}/))
+        show.year = Number($('a[title="See more release dates"]').text().match(/[0-9]{4}/)[0])
         show.alternativeName = this.scrapOriginalTitle($)
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
@@ -38,7 +40,25 @@ export default class ImdbService
         return show
     }
 
-    // region - Private functions
+    async fetchShowCredits(identifier: string): Promise<Show>
+    {
+        const html = await fetch(`https://www.imdb.com/title/${identifier}/fullcredits`)
+            .then(response => response.text())
+
+        // Saves a copy of the HTML for debug purposes
+        if(this.isDebugMode) this.saveHtml(identifier, html)
+        const $ = cheerio.load(html)
+
+        const show = new Show()
+        show.credits = {
+            directors: this.scrapDirectors($),
+            cast: this.scrapCast($)
+        }
+
+        return show
+    }
+
+    // region - Show Info
     private saveHtml(filename: string, html: string)
     {
         const scrapDir = 'scraps'
@@ -100,6 +120,40 @@ export default class ImdbService
         })
 
         return shows
+    }
+    // endregion
+
+    // region - Show Credits
+    private scrapDirectors($: CheerioStatic): { identifier: string, name: string }[]
+    {
+        const directors: { identifier: string, name: string }[] = []
+        $('#fullcredits_content > h4')
+            .filter((_, el) => $(el).text().includes('Directed'))
+            .next('table')
+            .find('td.name > a')
+            .each((_, el) => {
+                directors.push({
+                    identifier: $(el).attr('href').match(/\/name\/(.+)\//)[1],
+                    name: $(el).text().trim()
+                })
+            })
+
+        return directors
+    }
+
+    private scrapCast($: CheerioStatic): { identifier: string, name: string }[]
+    {
+        const cast: { identifier: string, name: string }[] = []
+        $('table[class="cast_list"]')
+            .find('td:not([class]) > a')
+            .each((_, el) => {
+                cast.push({
+                    identifier: $(el).attr('href').match(/\/name\/(.+)\//)[1],
+                    name: $(el).text().trim()
+                })
+            })
+
+        return cast
     }
     // endregion
 }
