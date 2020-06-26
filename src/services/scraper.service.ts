@@ -6,6 +6,9 @@ import { AllHtmlEntities } from 'html-entities'
 import Show from '../models/show.model'
 import Reference from '../models/reference.model'
 
+/**
+ * @ignore
+ */
 export default class ScraperService
 {
     private readonly language: string

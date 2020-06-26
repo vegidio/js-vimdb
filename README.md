@@ -22,28 +22,20 @@ $ npm install vimdb
 
 ## 🤖 Usage
 
+Import the class `Imdb` in your project and initialize it passing a parameter to specify in what language you want the results. For example, the `new Imdb('pt-BR')` will return results in Brazilian Portuguese.
+
+If no language parameter is specified then the default language will be set to English.
+
 ### Get a show by ID
 
-```javascript
-// Import the package in your script
+```typescript
+// Import the package in your script and initialize the Imdb class
 import Imdb from 'vimdb'
 const imdb = new Imdb('en')
 
 // Get the details of the show "The Simpsons"
 imdb.getShowById('tt0096697')
     .then(console.log)
-
-// Get the credits (directors and actors) of the show "Better Call Saul"
-imdb.getShowCreditsById('tt3032476')
-    .then(show => console.log(show.credits))
-
-// Get the list of episodes of the show "Game of Thrones"
-imdb.getShowEpisodesById('tt0944947')
-    .then(show => console.log(show.episodes))
-
-// Get the all information (details, credits and episodes) of the show "Cobra Kai"
-imdb.getAllShowData('tt7221388')
-    .then(console.log);
 ```
 
 And the response should be something similar to this:
@@ -89,7 +81,9 @@ And the response should be something similar to this:
 }
 ```
 
-More examples can be found in the `test/` folder on [Github](https://github.com/vegidio/nodejs-vimdb/tree/master/test).
+### Documentation
+
+For detailed information on how to use this package, please check the [API reference](https://vegidio.github.io/nodejs-vimdb) for more examples.
 
 ## 📝 License
 

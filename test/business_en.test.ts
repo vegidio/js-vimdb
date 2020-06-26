@@ -10,7 +10,7 @@ beforeAll(async () => {
     show = await imdb.getAllShowDataById('tt2650940')
 })
 
-describe('The Business is correctly scraped', () =>
+describe('The Business is correctly scraped (EN)', () =>
 {
     test('Type is "tv_show"', () => {
         expect(show.type).toEqual('tv_show')
@@ -41,7 +41,7 @@ describe('The Business is correctly scraped', () =>
         expect(show.aggregateRating.ratingCount).not.toBeNaN()
     })
 
-    test('There are 12 recommendations and one is "Me Chama de Bruna"', () => {
+    test('There are 12 recommendations and one is "Call Me Bruna"', () => {
         expect(show.recommended.length).toEqual(12)
         expect(show.recommended).toContainEqual(new Reference('tt5210146', 'Call Me Bruna'))
     })
