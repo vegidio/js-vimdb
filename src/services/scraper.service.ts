@@ -3,8 +3,9 @@ import fetch, { Headers} from 'node-fetch'
 import * as cheerio from 'cheerio'
 import { AllHtmlEntities } from 'html-entities'
 
-import Show from '../models/show.model'
+import Movie from '../models/movie.model'
 import Reference from '../models/reference.model'
+import Series from '../models/series.model'
 
 /**
  * @ignore
@@ -24,7 +25,7 @@ export default class ScraperService
         this.entities = new AllHtmlEntities()
     }
 
-    async fetchShowInfo(identifier: string): Promise<Show>
+    async fetchShowInfo(identifier: string): Promise<Movie | Series>
     {
         const html = await fetch(`https://www.imdb.com/title/${identifier}`,
             { headers: this.headers })
@@ -34,10 +35,12 @@ export default class ScraperService
         if(this.isDebugMode) this.saveHtml(identifier, html)
         const $ = cheerio.load(html)
 
-        const show = new Show()
+        // Determine the show type
+        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
+        const show = (type === 'tv_show') ? new Series() : new Movie()
+
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
-        show.type = $('meta[property="og:type"]').attr('content').split('.')[1]
         show.name = $('div.title_wrapper').find('h1').text().trim()
         show.summary = $('div.summary_text').text().trim()
         show.description = $('div#titleStoryLine').find('span:not([class])').html().trim()
@@ -47,23 +50,26 @@ export default class ScraperService
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
         show.genre = this.scrapGenre($)
-        show.poster = this.scrapPosters($)
+        show.image = this.scrapImages($)
         show.recommended = this.scrapRecommended($)
 
         return show
     }
 
-    async fetchShowCredits(identifier: string): Promise<Show>
+    async fetchShowCredits(identifier: string): Promise<Movie | Series>
     {
         const html = await fetch(`https://www.imdb.com/title/${identifier}/fullcredits`,
             { headers: this.headers })
             .then(response => response.text())
 
         // Saves a copy of the HTML for debug purposes
-        if(this.isDebugMode) this.saveHtml(`${identifier}_credits`, html)
+        if(this.isDebugMode) this.saveHtml(identifier, html)
         const $ = cheerio.load(html)
 
-        const show = new Show()
+        // Determine the show type
+        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
+        const show = (type === 'tv_show') ? new Series() : new Movie()
+
         show.credits = {
             directors: this.scrapDirectors($),
             cast: this.scrapCast($)
@@ -121,7 +127,7 @@ export default class ScraperService
         return genre
     }
 
-    private scrapPosters($: CheerioStatic): { small: string, big: string }
+    private scrapImages($: CheerioStatic): { small: string, big: string }
     {
         const small = $('div.poster > a > img').attr('src')
         const big = small.replace('_V1_UX182_CR0,0,182,268_AL_.jpg',

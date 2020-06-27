@@ -31,7 +31,7 @@ If no language parameter is specified then the default language will be set to E
 ```typescript
 // Import the package in your script and initialize the Imdb class
 import Imdb from 'vimdb'
-const imdb = new Imdb('en')
+const imdb = new Imdb()
 
 // Get the details of the show "The Simpsons"
 imdb.getShowById('tt0096697')

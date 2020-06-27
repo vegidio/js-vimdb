@@ -2,26 +2,18 @@ import Reference from './reference.model'
 
 /**
  * Represents a Show, with information about a Movie or Series.
+ * @ignore
  */
-export default class Show
+export default abstract class Show
 {
-    /** Unique identifier for movies and series */
+    /** Unique identifier for the show */
     identifier: string
-
-    /** Identifies the show type, "movie" or "tv_show" */
-    type: string
 
     /** Name of the show */
     name: string
 
-    /** An alternative name of the show, if it exists */
-    alternativeName: string
-
     /** Summary of the show */
     summary: string
-
-    /** Description of the show */
-    description: string
 
     /** The duration of the show, in minutes */
     duration: number
@@ -37,22 +29,16 @@ export default class Show
     /** Some genres that can be used to classify this show */
     genre: string[]
 
-    poster: {
-        /** URL to a low resolution version of the show's poster */
+    image: {
+        /** URL to a low resolution version of the show's image */
         small: string,
 
-        /** URL to a high resolution version of the show's poster */
+        /** URL to a high resolution version of the show's image */
         big: string
     }
 
-    /** Array of references to other shows that are similar to this one */
-    recommended: Reference[]
-
     /** The content rating of the show */
     contentRating: string
-
-    /** The year when the show was released */
-    year: number
 
     /** URL to the show on IMDb */
     url: string
@@ -63,17 +49,5 @@ export default class Show
 
         /** Array of references to the cast of the show */
         cast: Reference[]
-    }
-
-    /**
-     * Creates an instance of {@link Show} from a raw JS object.
-     *
-     * @param {unknown} obj - JS object from where the Show instance will be created
-     * @return {@link Show} - object presenting a movie or series.
-     */
-    static fromObject(obj: unknown): Show
-    {
-        const show = new Show()
-        return Object.assign(show, obj)
     }
 }

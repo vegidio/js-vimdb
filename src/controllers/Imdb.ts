@@ -1,8 +1,10 @@
-import ScraperService from './services/scraper.service'
-import Show from './models/show.model'
+import ScraperService from '../services/scraper.service'
+import Movie from '../models/movie.model'
+import Series from '../models/series.model'
 
 /**
  * Represents an IMDb instance from where the data will be scraped.
+ * @category Controller
  */
 export default class Imdb
 {
@@ -41,9 +43,9 @@ export default class Imdb
      *
      * @async
      * @param {string} identifier - the unique identifier for movies or series.
-     * @return {@link Show} - object presenting a movie or series.
+     * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getShowById(identifier: string): Promise<Show>
+    async getShowById(identifier: string): Promise<Movie | Series>
     {
         return this.scraper.fetchShowInfo(identifier)
     }
@@ -59,9 +61,9 @@ export default class Imdb
      *
      * @async
      * @param {string} identifier - the unique identifier for movies or series.
-     * @return {@link Show} - object presenting a movie or series.
+     * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getShowCreditsById(identifier: string): Promise<Show>
+    async getShowCreditsById(identifier: string): Promise<Movie | Series>
     {
         return this.scraper.fetchShowCredits(identifier)
     }
@@ -77,15 +79,19 @@ export default class Imdb
      *
      * @async
      * @param {string} identifier - the unique identifier for movies or series.
-     * @return {@link Show} - object presenting a movie or series.
+     * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getAllShowDataById(identifier: string): Promise<Show>
+    async getAllShowDataById(identifier: string): Promise<Movie | Series>
     {
         return Promise.all([
             this.scraper.fetchShowInfo(identifier),
             this.scraper.fetchShowCredits(identifier)
-        ]).then(shows => Show.fromObject({
-            ...shows[0], ...shows[1]
-        }))
+        ]).then(shows => {
+            if (shows[0] instanceof Series) {
+                return Series.fromObject({ ...shows[0], ...shows[1] })
+            } else {
+                return Movie.fromObject({ ...shows[0], ...shows[1] })
+            }
+        })
     }
 }

@@ -21,16 +21,4 @@ export default class Reference
         this.identifier = identifier
         this.name = name
     }
-
-    /**
-     * Creates an instance of {@link Reference} from a raw JS object.
-     *
-     * @param {unknown} obj - JS object from where the Reference instance will be created
-     * @return {@link Show} - object presenting a reference to a show or person.
-     */
-    static fromObject(obj: unknown): Reference
-    {
-        const reference = new Reference()
-        return Object.assign(reference, obj)
-    }
 }
