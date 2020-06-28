@@ -95,6 +95,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="imdb.html#getallshowdatabyid" class="tsd-kind-icon">get<wbr>All<wbr>Show<wbr>Data<wbr>ById</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="imdb.html#getseriesepisodesbyid" class="tsd-kind-icon">get<wbr>Series<wbr>Episodes<wbr>ById</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="imdb.html#getshowbyid" class="tsd-kind-icon">get<wbr>Show<wbr>ById</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="imdb.html#getshowcreditsbyid" class="tsd-kind-icon">get<wbr>Show<wbr>Credits<wbr>ById</a></li>
 							</ul>
@@ -152,7 +153,7 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Scrap the main information and the credits of a show.</p>
+									<p>Scrap the main information, credits and episodes (if it&#39;s a series) of a show.</p>
 								</div>
 								<pre><code class="language-typescript"><span class="hljs-comment">// Get the all information (details, credits and episodes) of the show &quot;Cobra Kai&quot;</span>
 imdb.getAllShowData(<span class="hljs-string">&#x27;tt7221388&#x27;</span>)
@@ -173,6 +174,42 @@ imdb.getAllShowData(<span class="hljs-string">&#x27;tt7221388&#x27;</span>)
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p><a href="movie.html">Movie</a> or <a href="series.html">Series</a> - object presenting a movie or series.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getseriesepisodesbyid" class="tsd-anchor"></a>
+					<h3>get<wbr>Series<wbr>Episodes<wbr>ById</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Series<wbr>Episodes<wbr>ById<span class="tsd-signature-symbol">(</span>identifier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Scrap the episodes references of a series.</p>
+								</div>
+								<pre><code class="language-typescript"><span class="hljs-comment">// Get the references to the episodes of the series &quot;The Mandalorian&quot;</span>
+imdb.getSeriesEpisodesById(<span class="hljs-string">&#x27;tt8111088&#x27;</span>)
+    .then(<span class="hljs-function"><span class="hljs-params">show</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(show.episodes))</code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>async</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>identifier: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the unique identifier for movies or series.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p><a href="series.html">Series</a> - object presenting a movie or series.</p>
 						</li>
 					</ul>
 				</section>
@@ -272,6 +309,9 @@ imdb.getShowCreditsById(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
 								<a href="imdb.html#getallshowdatabyid" class="tsd-kind-icon">get<wbr>All<wbr>Show<wbr>Data<wbr>ById</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="imdb.html#getseriesepisodesbyid" class="tsd-kind-icon">get<wbr>Series<wbr>Episodes<wbr>ById</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="imdb.html#getshowbyid" class="tsd-kind-icon">get<wbr>Show<wbr>ById</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -285,10 +325,13 @@ imdb.getShowCreditsById(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
 						<a href="movie.html" class="tsd-kind-icon">Movie</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="reference.html" class="tsd-kind-icon">Reference</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="series.html" class="tsd-kind-icon">Series</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#episodereference" class="tsd-kind-icon">Episode<wbr>Reference</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#reference" class="tsd-kind-icon">Reference</a>
 					</li>
 				</ul>
 			</nav>

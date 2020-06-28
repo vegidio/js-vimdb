@@ -1,11 +1,12 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import fetch, { Headers} from 'node-fetch'
 import * as cheerio from 'cheerio'
 import { AllHtmlEntities } from 'html-entities'
 
 import Movie from '../models/movie.model'
-import Reference from '../models/reference.model'
 import Series from '../models/series.model'
+import {EpisodeReference, Reference} from '../types'
 
 /**
  * @ignore
@@ -27,17 +28,8 @@ export default class ScraperService
 
     async fetchShowInfo(identifier: string): Promise<Movie | Series>
     {
-        const html = await fetch(`https://www.imdb.com/title/${identifier}`,
-            { headers: this.headers })
-            .then(response => response.text())
-
-        // Saves a copy of the HTML for debug purposes
-        if(this.isDebugMode) this.saveHtml(identifier, html)
-        const $ = cheerio.load(html)
-
-        // Determine the show type
-        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
-        const show = (type === 'tv_show') ? new Series() : new Movie()
+        // Setup the variables needed for fetch
+        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}`)
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
@@ -58,17 +50,8 @@ export default class ScraperService
 
     async fetchShowCredits(identifier: string): Promise<Movie | Series>
     {
-        const html = await fetch(`https://www.imdb.com/title/${identifier}/fullcredits`,
-            { headers: this.headers })
-            .then(response => response.text())
-
-        // Saves a copy of the HTML for debug purposes
-        if(this.isDebugMode) this.saveHtml(identifier, html)
-        const $ = cheerio.load(html)
-
-        // Determine the show type
-        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
-        const show = (type === 'tv_show') ? new Series() : new Movie()
+        // Setup the variables needed for fetch
+        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/fullcredits`)
 
         show.credits = {
             directors: this.scrapDirectors($),
@@ -78,12 +61,50 @@ export default class ScraperService
         return show
     }
 
-    private saveHtml(filename: string, html: string)
+    async fetchSeriesEpisodes(identifier: string): Promise<Movie | Series>
+    {
+        // Setup the variables needed for fetch
+        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/episodes`)
+
+        if (show instanceof Series) {
+            const seasons = Number($('#bySeason > option[selected]').val())
+            const promises: Promise<EpisodeReference[]>[] = []
+            for (let i = 1; i <= seasons; i++) { promises.push(this.scrapSeason(identifier, i)) }
+
+            show.seasons = seasons
+            show.episodes = (await Promise.all(promises)).flat()
+        }
+
+        return show
+    }
+
+    // region - Private methods
+    private async setupFetch(identifier: string, url: string): Promise<[CheerioStatic, Movie | Series]>
+    {
+        const html = await fetch(url, { headers: this.headers })
+            .then(response => response.text())
+
+        // Saves a copy of the HTML for debug purposes
+        if(this.isDebugMode) this.saveHtml(identifier, url, html)
+        const $ = cheerio.load(html)
+
+        // Determine the show type
+        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
+        const show = (type === 'tv_show') ? new Series() : new Movie()
+
+        return [$, show]
+    }
+
+    private saveHtml(identifier: string, url: string, html: string)
     {
         const scrapDir = 'scraps'
         if(!fs.existsSync(scrapDir)) fs.mkdirSync(scrapDir)
+
+        const basename = path.basename(url)
+        const filename = identifier === basename ? identifier : `${identifier}_${basename}`
         fs.writeFileSync(`${scrapDir}/${filename}_${this.language}.html`, html)
     }
+    // endregion
 
     // region - Show Info
     private scrapAlternativeTitle($: CheerioStatic): string
@@ -184,6 +205,34 @@ export default class ScraperService
             })
 
         return cast
+    }
+    // endregion
+
+    // region - Series Episodes
+    private async scrapSeason(identifier: string, season: number): Promise<EpisodeReference[]>
+    {
+        const url = `https://www.imdb.com/title/${identifier}/episodes?season=${season}`
+        const html = await fetch(url, { headers: this.headers }).then(response => response.text())
+        const $ = cheerio.load(html)
+
+        const references: EpisodeReference[] = []
+        $('div.list_item').each((_, el) => {
+            references.push({
+                season: season,
+                number: Number($(el).find('meta').attr('content')),
+                identifier: $(el).find('div.wtw-option-standalone').attr('data-tconst'),
+                name: $(el).find('a[itemprop="name"]').text(),
+                summary: $(el).find('div[itemprop="description"]').text().trim(),
+                aggregateRating: {
+                    ratingValue: Number($(el).find('span.ipl-rating-star__rating').html()
+                        .replace(',', '.')),
+                    ratingCount: Number($(el).find('span.ipl-rating-star__total-votes').text()
+                        .match(/[0-9]+/))
+                }
+            })
+        })
+
+        return references
     }
     // endregion
 }

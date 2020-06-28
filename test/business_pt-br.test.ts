@@ -6,22 +6,18 @@ let series: Series
 
 beforeAll(async () => {
     jest.setTimeout(60000)
-    const imdb = new Imdb('en', true)
+    const imdb = new Imdb('pt-br', true)
     series = await imdb.getAllShowDataById('tt2650940') as Series
 })
 
-describe('The Business is correctly scraped (EN)', () =>
+describe('O Negócio is correctly scraped (PT-BR)', () =>
 {
     test('The show is a Series', () => {
         expect(series).toBeInstanceOf(Series)
     })
 
     test('Name is "The Business"', () => {
-        expect(series.name).toEqual('The Business')
-    })
-
-    test('Alternative name is "O Negócio"', () => {
-        expect(series.alternativeName).toEqual('O Negócio')
+        expect(series.name).toEqual('O Negócio')
     })
 
     test('Summary is not empty', () => {
@@ -41,9 +37,9 @@ describe('The Business is correctly scraped (EN)', () =>
         expect(series.aggregateRating.ratingCount).not.toBeNaN()
     })
 
-    test('There are 12 recommendations and one is "Call Me Bruna"', () => {
+    test('There are 12 recommendations and one is "Me Chama de Bruna"', () => {
         expect(series.recommended.length).toEqual(12)
-        expect(series.recommended).toContainEqual({ identifier: 'tt5210146', name: 'Call Me Bruna' })
+        expect(series.recommended).toContainEqual({ identifier: 'tt5210146', name: 'Me Chama de Bruna' })
     })
 
     test('Genres are "Comedy" and "Drama"', () => {
@@ -51,7 +47,7 @@ describe('The Business is correctly scraped (EN)', () =>
     })
 
     test('The content rating is TV-MA', () => {
-        expect(series.contentRating).toEqual('TV-MA')
+        expect(series.contentRating).toEqual('16')
     })
 
     test('The release year is 2013', () => {

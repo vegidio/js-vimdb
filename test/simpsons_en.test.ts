@@ -1,13 +1,13 @@
 import fetch from 'node-fetch'
 import * as FileType from 'file-type'
-import Imdb, { Series, Reference } from '../'
+import Imdb, { Series } from '../'
 
 let series: Series
 
 beforeAll(async () => {
     jest.setTimeout(60000)
     const imdb = new Imdb('en', true)
-    series = await imdb.getAllShowDataById('tt0096697')
+    series = await imdb.getAllShowDataById('tt0096697') as Series
 })
 
 describe('The Simpsons is correctly scraped (EN)', () =>
@@ -39,7 +39,7 @@ describe('The Simpsons is correctly scraped (EN)', () =>
 
     test('There are 12 recommendations and one is "Family Guy"', () => {
         expect(series.recommended.length).toEqual(12)
-        expect(series.recommended).toContainEqual(new Reference('tt0182576', 'Family Guy'))
+        expect(series.recommended).toContainEqual({ identifier: 'tt0182576', name: 'Family Guy' })
     })
 
     test('Genres are "Animation" and "Comedy"', () => {
@@ -73,12 +73,21 @@ describe('The Simpsons is correctly scraped (EN)', () =>
     })
 
     test('There are at least the directors Mike and Mark', () => {
-        expect(series.credits.directors).toContainEqual(new Reference('nm0027214', 'Mike B. Anderson'))
-        expect(series.credits.directors).toContainEqual(new Reference('nm0456658', 'Mark Kirkland'))
+        expect(series.credits.directors).toContainEqual({ identifier: 'nm0027214', name: 'Mike B. Anderson' })
+        expect(series.credits.directors).toContainEqual({ identifier: 'nm0456658', name: 'Mark Kirkland' })
     })
 
     test('There are at least the actors Hank and Nancy', () => {
-        expect(series.credits.cast).toContainEqual(new Reference('nm0144657', 'Dan Castellaneta'))
-        expect(series.credits.cast).toContainEqual(new Reference('nm0004813', 'Nancy Cartwright'))
+        expect(series.credits.cast).toContainEqual({ identifier: 'nm0144657', name: 'Dan Castellaneta' })
+        expect(series.credits.cast).toContainEqual({ identifier: 'nm0004813', name: 'Nancy Cartwright' })
+    })
+
+    test('There are at least 30 seasons', () => {
+        expect(series.seasons).toBeGreaterThan(30)
+    })
+
+    test('There are at least 600 episodes and one is "Treehouse of Horror"', () => {
+        expect(series.episodes.length).toBeGreaterThan(600)
+        expect(series.episodes).toContainEqual(expect.objectContaining({ identifier: 'tt0701278', name: 'Treehouse of Horror' }))
     })
 })

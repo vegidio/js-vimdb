@@ -69,7 +69,25 @@ export default class Imdb
     }
 
     /**
-     * Scrap the main information and the credits of a show.
+     * Scrap the episodes references of a series.
+     *
+     * ```typescript
+     * // Get the references to the episodes of the series "The Mandalorian"
+     * imdb.getSeriesEpisodesById('tt8111088')
+     *     .then(show => console.log(show.episodes))
+     * ```
+     *
+     * @async
+     * @param {string} identifier - the unique identifier for movies or series.
+     * @return {@link Series} - object presenting a movie or series.
+     */
+    async getSeriesEpisodesById(identifier: string): Promise<Movie | Series>
+    {
+        return this.scraper.fetchSeriesEpisodes(identifier)
+    }
+
+    /**
+     * Scrap the main information, credits and episodes (if it's a series) of a show.
      *
      * ```typescript
      * // Get the all information (details, credits and episodes) of the show "Cobra Kai"
@@ -85,10 +103,11 @@ export default class Imdb
     {
         return Promise.all([
             this.scraper.fetchShowInfo(identifier),
-            this.scraper.fetchShowCredits(identifier)
+            this.scraper.fetchShowCredits(identifier),
+            this.scraper.fetchSeriesEpisodes(identifier)
         ]).then(shows => {
             if (shows[0] instanceof Series) {
-                return Series.fromObject({ ...shows[0], ...shows[1] })
+                return Series.fromObject({ ...shows[0], ...shows[1], ...shows[2] })
             } else {
                 return Movie.fromObject({ ...shows[0], ...shows[1] })
             }

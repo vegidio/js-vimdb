@@ -1,4 +1,4 @@
-import Reference from './reference.model'
+import { Reference } from '../types'
 
 /**
  * Represents a Show, with information about a Movie or Series.

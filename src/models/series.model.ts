@@ -1,5 +1,5 @@
 import Show from './show.model'
-import Reference from './reference.model'
+import { Reference, EpisodeReference } from '../types'
 
 /**
  * Represents a Series.
@@ -21,6 +21,12 @@ export default class Series extends Show
 
     /** The year when the series was released */
     year: number
+
+    /** Number of seasons that already aired */
+    seasons: number
+
+    /** Array of references to episodes of this series */
+    episodes: EpisodeReference[]
 
     /**
      * Creates an instance of {@link Series} from a raw JS object.

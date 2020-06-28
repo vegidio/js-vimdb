@@ -1,5 +1,5 @@
 import Show from './show.model'
-import Reference from './reference.model'
+import { Reference } from '../types'
 
 /**
  * Represents a Movie.
