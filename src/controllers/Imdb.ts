@@ -1,6 +1,8 @@
 import ScraperService from '../services/scraper.service'
 import Movie from '../models/movie.model'
 import Series from '../models/series.model'
+import { Reference } from '../types'
+import { SearchType } from '../enums'
 
 /**
  * Represents an IMDb instance from where the data will be scraped.
@@ -45,7 +47,7 @@ export default class Imdb
      * @param {string} identifier - the unique identifier for movies or series.
      * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getShowById(identifier: string): Promise<Movie | Series>
+    async getShow(identifier: string): Promise<Movie | Series>
     {
         return this.scraper.fetchShowInfo(identifier)
     }
@@ -63,7 +65,7 @@ export default class Imdb
      * @param {string} identifier - the unique identifier for movies or series.
      * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getShowCreditsById(identifier: string): Promise<Movie | Series>
+    async getShowCredits(identifier: string): Promise<Movie | Series>
     {
         return this.scraper.fetchShowCredits(identifier)
     }
@@ -81,7 +83,7 @@ export default class Imdb
      * @param {string} identifier - the unique identifier for movies or series.
      * @return {@link Series} - object presenting a movie or series.
      */
-    async getSeriesEpisodesById(identifier: string): Promise<Movie | Series>
+    async getSeriesEpisodes(identifier: string): Promise<Movie | Series>
     {
         return this.scraper.fetchSeriesEpisodes(identifier)
     }
@@ -99,7 +101,7 @@ export default class Imdb
      * @param {string} identifier - the unique identifier for movies or series.
      * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getAllShowDataById(identifier: string): Promise<Movie | Series>
+    async getAllShowData(identifier: string): Promise<Movie | Series>
     {
         return Promise.all([
             this.scraper.fetchShowInfo(identifier),
@@ -112,5 +114,24 @@ export default class Imdb
                 return Movie.fromObject({ ...shows[0], ...shows[1] })
             }
         })
+    }
+
+    /**
+     * Search for shows or people.
+     *
+     * ```typescript
+     * // Search for shows with the query "Hangover"
+     * imdb.search('hangover', SearchType.Title)
+     *     .then(console.log);
+     * ```
+     *
+     * @async
+     * @param {string} query - the query parameter.
+     * @param {SearchType} [type=SearchType.Title] - the type of data that must be searched.
+     * @return {@link Reference} - array of references to a shows or people.
+     */
+    async search(query: string, type = SearchType.Title): Promise<Reference[]>
+    {
+        return this.scraper.search(query, type)
     }
 }

@@ -7,7 +7,7 @@ let series: Series
 beforeAll(async () => {
     jest.setTimeout(60000)
     const imdb = new Imdb('en', true)
-    series = await imdb.getAllShowDataById('tt0096697') as Series
+    series = await imdb.getAllShowData('tt0096697') as Series
 })
 
 describe('The Simpsons is correctly scraped (EN)', () =>

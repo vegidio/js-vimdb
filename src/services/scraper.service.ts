@@ -6,7 +6,8 @@ import { AllHtmlEntities } from 'html-entities'
 
 import Movie from '../models/movie.model'
 import Series from '../models/series.model'
-import {EpisodeReference, Reference} from '../types'
+import { EpisodeReference, Reference } from '../types'
+import { SearchType } from '../enums'
 
 /**
  * @ignore
@@ -76,6 +77,24 @@ export default class ScraperService
         }
 
         return show
+    }
+
+    async search(query: string, type: SearchType): Promise<Reference[]>
+    {
+        const url = `https://www.imdb.com/find?q=${encodeURIComponent(query)}&s=${type}`
+        const html = await fetch(url, { headers: this.headers }).then(response => response.text())
+        const $ = cheerio.load(html)
+
+        const result: Reference[] = []
+        $('tr.findResult').each((_, el) => {
+            result.push({
+                identifier: $(el).find('td.primary_photo > a').attr('href')
+                    .match(/title\/(.+)\//)[1],
+                name: $(el).find('td.result_text > a').text()
+            })
+        })
+
+        return result
     }
 
     // region - Private methods
