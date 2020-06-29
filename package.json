@@ -1,9 +1,9 @@
 {
     "name": "vimdb",
-    "version": "3.3.1",
+    "version": "3.3.3",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
-    "license": "MIT",
+    "license": "ISC",
     "main": "lib/vimdb.js",
     "types": "lib/src/index.d.ts",
     "devDependencies": {

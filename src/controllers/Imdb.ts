@@ -39,7 +39,7 @@ export default class Imdb
      *
      * ```typescript
      * // Get information about the show "The Simpsons"
-     * imdb.getShowById('tt0096697')
+     * imdb.getShow('tt0096697')
      *     .then(console.log)
      * ```
      *
@@ -57,7 +57,7 @@ export default class Imdb
      *
      * ```typescript
      * // Get the credits (directors and actors) of the show "Better Call Saul"
-     * imdb.getShowCreditsById('tt3032476')
+     * imdb.getShowCredits('tt3032476')
      *     .then(show => console.log(show.credits))
      * ```
      *
@@ -75,7 +75,7 @@ export default class Imdb
      *
      * ```typescript
      * // Get the references to the episodes of the series "The Mandalorian"
-     * imdb.getSeriesEpisodesById('tt8111088')
+     * imdb.getSeriesEpisodes('tt8111088')
      *     .then(show => console.log(show.episodes))
      * ```
      *
@@ -121,7 +121,7 @@ export default class Imdb
      *
      * ```typescript
      * // Search for shows with the query "Hangover"
-     * imdb.search('hangover', SearchType.Title)
+     * imdb.search('Hangover', SearchType.Title)
      *     .then(console.log);
      * ```
      *

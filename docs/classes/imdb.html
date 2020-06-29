@@ -193,7 +193,7 @@ imdb.getAllShowData(<span class="hljs-string">&#x27;tt7221388&#x27;</span>)
 									<p>Scrap the episodes references of a series.</p>
 								</div>
 								<pre><code class="language-typescript"><span class="hljs-comment">// Get the references to the episodes of the series &quot;The Mandalorian&quot;</span>
-imdb.getSeriesEpisodesById(<span class="hljs-string">&#x27;tt8111088&#x27;</span>)
+imdb.getSeriesEpisodes(<span class="hljs-string">&#x27;tt8111088&#x27;</span>)
     .then(<span class="hljs-function"><span class="hljs-params">show</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(show.episodes))</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>async</dt>
@@ -229,7 +229,7 @@ imdb.getSeriesEpisodesById(<span class="hljs-string">&#x27;tt8111088&#x27;</span
 									<p>Scrap the main information of a show, like name, description, release year, etc.</p>
 								</div>
 								<pre><code class="language-typescript"><span class="hljs-comment">// Get information about the show &quot;The Simpsons&quot;</span>
-imdb.getShowById(<span class="hljs-string">&#x27;tt0096697&#x27;</span>)
+imdb.getShow(<span class="hljs-string">&#x27;tt0096697&#x27;</span>)
     .then(<span class="hljs-built_in">console</span>.log)</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>async</dt>
@@ -265,7 +265,7 @@ imdb.getShowById(<span class="hljs-string">&#x27;tt0096697&#x27;</span>)
 									<p>Scrap the credits of a show, like the list of directors and cast.</p>
 								</div>
 								<pre><code class="language-typescript"><span class="hljs-comment">// Get the credits (directors and actors) of the show &quot;Better Call Saul&quot;</span>
-imdb.getShowCreditsById(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
+imdb.getShowCredits(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
     .then(<span class="hljs-function"><span class="hljs-params">show</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(show.credits))</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>async</dt>
@@ -301,7 +301,7 @@ imdb.getShowCreditsById(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
 									<p>Search for shows or people.</p>
 								</div>
 								<pre><code class="language-typescript"><span class="hljs-comment">// Search for shows with the query &quot;Hangover&quot;</span>
-imdb.search(<span class="hljs-string">&#x27;hangover&#x27;</span>, SearchType.Title)
+imdb.search(<span class="hljs-string">&#x27;Hangover&#x27;</span>, SearchType.Title)
     .then(<span class="hljs-built_in">console</span>.log);</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>async</dt>
