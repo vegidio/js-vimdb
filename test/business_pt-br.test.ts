@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import * as FileType from 'file-type'
-import Imdb, { Series } from '../'
+import Imdb, { Series } from '../src'
 
 let series: Series
 
