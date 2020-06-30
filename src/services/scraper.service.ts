@@ -34,12 +34,12 @@ export default class ScraperService
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
-        show.name = $('div.title_wrapper').find('h1').text().trim()
         show.summary = $('div.summary_text').text().trim()
         show.description = $('div#titleStoryLine').find('span:not([class])').html().trim()
         show.year = Number($('a[title="See more release dates"]').text().match(/[0-9]{4}/)[0])
+        show.name = this.scrapName($)
+        show.alternativeName = this.scrapAlternativeName($)
         show.contentRating = this.scrapContentRating($)
-        show.alternativeName = this.scrapAlternativeTitle($)
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
         show.genre = this.scrapGenre($)
@@ -108,8 +108,8 @@ export default class ScraperService
         const $ = cheerio.load(html)
 
         // Determine the show type
-        const type = $('meta[property="og:type"]').attr('content').split('.')[1]
-        const show = (type === 'tv_show') ? new Series() : new Movie()
+        const type = $('meta[property="og:type"]').attr('content')
+        const show = (type && type.split('.')[1] === 'tv_show') ? new Series() : new Movie()
 
         return [$, show]
     }
@@ -126,7 +126,14 @@ export default class ScraperService
     // endregion
 
     // region - Show Info
-    private scrapAlternativeTitle($: CheerioStatic): string
+    private scrapName($: CheerioStatic): string
+    {
+        const el = $('div.title_wrapper > h1').html()
+        const name = (el.includes('<span')) ? el.match(/(.+)<span/)[1] : el.trim()
+        return this.entities.decode(name).trim()
+    }
+
+    private scrapAlternativeName($: CheerioStatic): string
     {
         const el = $('div.originalTitle').html()
         return el ? this.entities.decode(el.match(/(.+)<span/)[1]) : undefined

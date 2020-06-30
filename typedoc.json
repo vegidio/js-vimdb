@@ -1,6 +1,12 @@
 {
     "excludePrivate": true,
-    "inputFiles": ["src"],
+    "exclude": [
+        "coverage/**",
+        "docs/**"
+    ],
+    "inputFiles": [
+        "src"
+    ],
     "mode": "file",
     "out": "docs",
     "plugin": [],

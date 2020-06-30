@@ -23,7 +23,7 @@ $ npm install vimdb
 
 ## 🤖 Usage
 
-Import the class `Imdb` in your project and initialize it passing a parameter to specify in what language you want the results. For example, the `new Imdb('pt-BR')` will return results in Brazilian Portuguese.
+Import the class `Imdb` in your project and initialize it passing a parameter to specify in what language you want the results. For example, `new Imdb('pt-BR')` will return results in Brazilian Portuguese.
 
 If no language parameter is specified then the default language will be set to English.
 

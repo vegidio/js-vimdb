@@ -21,18 +21,18 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
-      - name: Build the package
+      - name: Test the scraper
         run: |
           yarn
-          yarn build
+          yarn test
 
-      - name: Test the scraper
-        run: yarn test
-
-      - name: Upload stats to Codecov
+      - name: Send stats to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
+
+      - name: Build the package
+        run: yarn build
 
       - name: Upload package to the registry
         run: |
