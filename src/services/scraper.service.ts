@@ -34,11 +34,11 @@ export default class ScraperService
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
-        show.summary = $('div.summary_text').text().trim()
-        show.description = $('div#titleStoryLine').find('span:not([class])').html().trim()
         show.year = Number($('a[title="See more release dates"]').text().match(/[0-9]{4}/)[0])
         show.name = this.scrapName($)
         show.alternativeName = this.scrapAlternativeName($)
+        show.summary = this.scrapSummary($)
+        show.description = this.scrapDescription($)
         show.contentRating = this.scrapContentRating($)
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
@@ -129,7 +129,7 @@ export default class ScraperService
     private scrapName($: CheerioStatic): string
     {
         const el = $('div.title_wrapper > h1').html()
-        const name = (el.includes('<span')) ? el.match(/(.+)<span/)[1] : el.trim()
+        const name = el.includes('<span') ? el.match(/(.+)<span/)[1] : el.trim()
         return this.entities.decode(name).trim()
     }
 
@@ -139,16 +139,28 @@ export default class ScraperService
         return el ? this.entities.decode(el.match(/(.+)<span/)[1]) : undefined
     }
 
+    private scrapSummary($: CheerioStatic): string
+    {
+        const el = $('div.summary_text').html()
+        return el.includes('<a href') ? undefined : this.entities.decode(el).trim()
+    }
+
+    private scrapDescription($: CheerioStatic): string
+    {
+        const el = $('div#titleStoryLine').find('span:not([class])').html()
+        return el.includes('|') ? undefined : el.trim()
+    }
+
     private scrapContentRating($: CheerioStatic): string
     {
-        const group = $('div.subtext').html().trim().match(/(.*)\n/)
-        return group ? group[1] : undefined
+        const group = $('div.subtext').html().trim().match(/(.+)\n/)
+        return (group && !group[1].includes('<a href')) ? group[1] : undefined
     }
 
     private scrapDuration($: CheerioStatic): number
     {
-        const duration = $('div.subtext > time').attr('datetime').match(/PT([0-9]+)M/)[1]
-        return Number(duration)
+        const duration = $('div.subtext > time').attr('datetime')
+        return duration ? Number(duration.match(/PT([0-9]+)M/)[1]) : undefined
     }
 
     private scrapRating($: CheerioStatic): { ratingValue: number, ratingCount: number }
@@ -177,8 +189,8 @@ export default class ScraperService
     private scrapImages($: CheerioStatic): { small: string, big: string }
     {
         const small = $('div.poster > a > img').attr('src')
-        const big = small.replace('_V1_UX182_CR0,0,182,268_AL_.jpg',
-            '_V1_SY1000_CR0,0,666,1000_AL_.jpg')
+        const big = small ? small.replace('_V1_UX182_CR0,0,182,268_AL_.jpg',
+            '_V1_SY1000_CR0,0,666,1000_AL_.jpg') : undefined
 
         return { small: small, big: big }
     }

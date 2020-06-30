@@ -104,9 +104,9 @@ export default class Imdb
     async getAllShowData(identifier: string): Promise<Movie | Series>
     {
         return Promise.all([
-            this.scraper.fetchShowInfo(identifier),
-            this.scraper.fetchShowCredits(identifier),
-            this.scraper.fetchSeriesEpisodes(identifier)
+            this.getShow(identifier),
+            this.getShowCredits(identifier),
+            this.getSeriesEpisodes(identifier)
         ]).then(shows => {
             if (shows[0] instanceof Series) {
                 return Series.fromObject({ ...shows[0], ...shows[1], ...shows[2] })
