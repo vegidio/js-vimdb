@@ -23,7 +23,7 @@ export default class ScraperService
     {
         this.language = language
         this.isDebugMode = debug
-        this.headers = new Headers({ 'Accept-Language': language })
+        this.headers = new Headers({ 'Accept-Language': language, 'User-Agent': this.randomUserAgent() })
         this.entities = new AllHtmlEntities()
     }
 
@@ -99,6 +99,19 @@ export default class ScraperService
     }
 
     // region - Private methods
+    private randomUserAgent(): string
+    {
+        const userAgents = [
+            'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+        ]
+
+        return userAgents[Math.floor(Math.random() * userAgents.length)]
+    }
+
     private async setupFetch(identifier: string, url: string): Promise<[CheerioStatic, Movie | Series]>
     {
         const html = await fetch(url, { headers: this.headers })
