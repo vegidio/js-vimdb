@@ -22,8 +22,12 @@ describe('I otsy, i deti is correctly scraped (EN)', () =>
         expect(movie.year).toEqual(2013)
     })
 
-    test('There is one director Feliks', () => {
+    test('Director is Feliks Gerchikov', () => {
         expect(movie.credits.directors).toContainEqual({ identifier: 'nm3703121', name: 'Feliks Gerchikov' })
+    })
+
+    test('Writer is Rauf Kubayev', () => {
+        expect(movie.credits.writers).toContainEqual({ identifier: 'nm1195196', name: 'Rauf Kubayev' })
     })
 
     test('There are at least the actors Natalya and Anastasiya', () => {

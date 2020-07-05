@@ -81,6 +81,11 @@ describe('The Business is correctly scraped (EN)', () =>
         expect(series.credits.directors).toContainEqual({ identifier: 'nm1155504', name: 'Júlia Pacheco Jordão' })
     })
 
+    test('There are at least the writers Rodrigo and Fabio', () => {
+        expect(series.credits.writers).toContainEqual({ identifier: 'nm2639477', name: 'Rodrigo Castilho' })
+        expect(series.credits.writers).toContainEqual({ identifier: 'nm1992562', name: 'Fabio Danesi' })
+    })
+
     test('There are at least the actors Rafaela and Juliana', () => {
         expect(series.credits.cast).toContainEqual({ identifier: 'nm0973465', name: 'Rafaela Mandelli' })
         expect(series.credits.cast).toContainEqual({ identifier: 'nm3170472', name: 'Juliana Schalch' })

@@ -7,7 +7,7 @@ let movie: Movie
 beforeAll(async () => {
     jest.setTimeout(60000)
     const imdb = new Imdb('en', true)
-    movie = await imdb.getAllShowData('tt7286456') as Movie
+    movie = await imdb.getAllShowData('tt7286456', { episodes: false }) as Movie
 })
 
 describe('Joker is correctly scraped (EN)', () =>
@@ -74,6 +74,11 @@ describe('Joker is correctly scraped (EN)', () =>
 
     test('Director is "Todd Phillips"', () => {
         expect(movie.credits.directors).toContainEqual({ identifier: 'nm0680846', name: 'Todd Phillips' })
+    })
+
+    test('There are at least the writers Scott and Bob', () => {
+        expect(movie.credits.writers).toContainEqual({ identifier: 'nm0798788', name: 'Scott Silver' })
+        expect(movie.credits.writers).toContainEqual({ identifier: 'nm0004170', name: 'Bob Kane' })
     })
 
     test('There are at least the actors Joaquin and Robert', () => {

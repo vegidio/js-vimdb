@@ -77,6 +77,11 @@ describe('The Simpsons is correctly scraped (EN)', () =>
         expect(series.credits.directors).toContainEqual({ identifier: 'nm0456658', name: 'Mark Kirkland' })
     })
 
+    test('There are at least the writers James and Matt', () => {
+        expect(series.credits.writers).toContainEqual({ identifier: 'nm0000985', name: 'James L. Brooks' })
+        expect(series.credits.writers).toContainEqual({ identifier: 'nm0004981', name: 'Matt Groening' })
+    })
+
     test('There are at least the actors Hank and Nancy', () => {
         expect(series.credits.cast).toContainEqual({ identifier: 'nm0144657', name: 'Dan Castellaneta' })
         expect(series.credits.cast).toContainEqual({ identifier: 'nm0004813', name: 'Nancy Cartwright' })

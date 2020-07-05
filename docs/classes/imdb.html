@@ -146,7 +146,7 @@
 					<a name="getallshowdata" class="tsd-anchor"></a>
 					<h3>get<wbr>All<wbr>Show<wbr>Data</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>All<wbr>Show<wbr>Data<span class="tsd-signature-symbol">(</span>identifier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>All<wbr>Show<wbr>Data<span class="tsd-signature-symbol">(</span>identifier<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, type<span class="tsd-signature-symbol">?: </span><a href="../index.html#datatype" class="tsd-signature-type">DataType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -171,6 +171,9 @@ imdb.getAllShowData(<span class="hljs-string">&#x27;tt7221388&#x27;</span>)
 									<div class="tsd-comment tsd-typography">
 										<p>the unique identifier for movies or series.</p>
 									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> type: <a href="../index.html#datatype" class="tsd-signature-type">DataType</a><span class="tsd-signature-symbol"> = { main: true, credits: true, episodes: true }</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="movie.html" class="tsd-signature-type">Movie</a><span class="tsd-signature-symbol"> | </span><a href="series.html" class="tsd-signature-type">Series</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -262,9 +265,9 @@ imdb.getShow(<span class="hljs-string">&#x27;tt0096697&#x27;</span>)
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Scrap the credits of a show, like the list of directors and cast.</p>
+									<p>Scrap the credits of a show, like the list of directors, writers and cast.</p>
 								</div>
-								<pre><code class="language-typescript"><span class="hljs-comment">// Get the credits (directors and actors) of the show &quot;Better Call Saul&quot;</span>
+								<pre><code class="language-typescript"><span class="hljs-comment">// Get the credits (directors, writers and actors) of the show &quot;Better Call Saul&quot;</span>
 imdb.getShowCredits(<span class="hljs-string">&#x27;tt3032476&#x27;</span>)
     .then(<span class="hljs-function"><span class="hljs-params">show</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(show.credits))</code></pre>
 								<dl class="tsd-comment-tags">
@@ -372,6 +375,9 @@ imdb.search(<span class="hljs-string">&#x27;Hangover&#x27;</span>, SearchType.Ti
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="series.html" class="tsd-kind-icon">Series</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#datatype" class="tsd-kind-icon">Data<wbr>Type</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../index.html#episodereference" class="tsd-kind-icon">Episode<wbr>Reference</a>

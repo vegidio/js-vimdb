@@ -5,6 +5,15 @@ import { Reference } from '../types'
 import { SearchType } from '../enums'
 
 /**
+ * The type of data that must be fetched.
+ *
+ * @param {boolean} [main=true] - main show info.
+ * @param {boolean} [credits=true] - show credits.
+ * @param {boolean} [episodes=true] - show episodes, if it's a series.
+ */
+type DataType = { main?: boolean, credits?: boolean, episodes?: boolean }
+
+/**
  * Represents an IMDb instance from where the data will be scraped.
  * @category Controller
  */
@@ -53,10 +62,10 @@ export default class Imdb
     }
 
     /**
-     * Scrap the credits of a show, like the list of directors and cast.
+     * Scrap the credits of a show, like the list of directors, writers and cast.
      *
      * ```typescript
-     * // Get the credits (directors and actors) of the show "Better Call Saul"
+     * // Get the credits (directors, writers and actors) of the show "Better Call Saul"
      * imdb.getShowCredits('tt3032476')
      *     .then(show => console.log(show.credits))
      * ```
@@ -99,19 +108,22 @@ export default class Imdb
      *
      * @async
      * @param {string} identifier - the unique identifier for movies or series.
+     * @param {DataType} [type] - the type of data that must be fetched.
      * @return {@link Movie} or {@link Series} - object presenting a movie or series.
      */
-    async getAllShowData(identifier: string): Promise<Movie | Series>
+    async getAllShowData(identifier: string, type: DataType = { main: true, credits: true, episodes: true }):
+        Promise<Movie | Series>
     {
-        return Promise.all([
-            this.getShow(identifier),
-            this.getShowCredits(identifier),
-            this.getSeriesEpisodes(identifier)
-        ]).then(shows => {
+        const promises = []
+        if (type.main || type.main == undefined) promises.push(this.getShow(identifier))
+        if (type.credits || type.credits == undefined) promises.push(this.getShowCredits(identifier))
+        if (type.episodes || type.episodes == undefined) promises.push(this.getSeriesEpisodes(identifier))
+
+        return Promise.all(promises).then(shows => {
             if (shows[0] instanceof Series) {
-                return Series.fromObject({ ...shows[0], ...shows[1], ...shows[2] })
+                return Series.fromObject(Object.assign({}, ...shows))
             } else {
-                return Movie.fromObject({ ...shows[0], ...shows[1] })
+                return Movie.fromObject(Object.assign({}, ...shows))
             }
         })
     }

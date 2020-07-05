@@ -56,6 +56,7 @@ export default class ScraperService
 
         show.credits = {
             directors: this.scrapDirectors($),
+            writers: this.scrapWriters($),
             cast: this.scrapCast($)
         }
 
@@ -218,6 +219,23 @@ export default class ScraperService
         const directors: Reference[] = []
         $('#fullcredits_content > h4')
             .filter((_, el) => $(el).text().includes('Directed'))
+            .next('table')
+            .find('td.name > a')
+            .each((_, el) => {
+                directors.push({
+                    identifier: $(el).attr('href').match(/\/name\/(.+)\//)[1],
+                    name: $(el).text().trim()
+                })
+            })
+
+        return directors
+    }
+
+    private scrapWriters($: CheerioStatic): Reference[]
+    {
+        const directors: Reference[] = []
+        $('#fullcredits_content > h4')
+            .filter((_, el) => $(el).text().includes('Writing'))
             .next('table')
             .find('td.name > a')
             .each((_, el) => {

@@ -47,6 +47,9 @@ export default abstract class Show
         /** Array of references to all directors of the show */
         directors: Reference[],
 
+        /** Array of references to all writers of the show */
+        writers: Reference[],
+
         /** Array of references to the cast of the show */
         cast: Reference[]
     }
