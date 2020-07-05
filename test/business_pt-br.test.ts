@@ -46,7 +46,7 @@ describe('O Negócio is correctly scraped (PT-BR)', () =>
         expect(series.genre).toEqual(['Comedy', 'Drama'])
     })
 
-    test('The content rating is TV-MA', () => {
+    test('The content rating is 16', () => {
         expect(series.contentRating).toEqual('16')
     })
 

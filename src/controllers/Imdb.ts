@@ -120,11 +120,9 @@ export default class Imdb
         if (type.episodes || type.episodes == undefined) promises.push(this.getSeriesEpisodes(identifier))
 
         return Promise.all(promises).then(shows => {
-            if (shows[0] instanceof Series) {
-                return Series.fromObject(Object.assign({}, ...shows))
-            } else {
-                return Movie.fromObject(Object.assign({}, ...shows))
-            }
+            return (shows[0] instanceof Series) ?
+                Series.fromObject(Object.assign({}, ...shows)) :
+                Movie.fromObject(Object.assign({}, ...shows))
         })
     }
 

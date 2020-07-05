@@ -34,12 +34,12 @@ export default class ScraperService
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
-        show.year = Number($('a[title="See more release dates"]').text().match(/[0-9]{4}/)[0])
         show.name = this.scrapName($)
         show.alternativeName = this.scrapAlternativeName($)
         show.summary = this.scrapSummary($)
         show.description = this.scrapDescription($)
         show.contentRating = this.scrapContentRating($)
+        show.year = this.scrapYear($)
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
         show.genre = this.scrapGenre($)
@@ -155,7 +155,16 @@ export default class ScraperService
     private scrapContentRating($: CheerioStatic): string
     {
         const group = $('div.subtext').html().trim().match(/(.+)\n/)
-        return (group && !group[1].includes('<a href')) ? group[1] : undefined
+        return (group && !group[1].includes('<a') && !group[1].includes('<time')) ? group[1] : undefined
+    }
+
+    private scrapYear($: CheerioStatic): number
+    {
+        const group = $('a[title="See more release dates"]').text().match(/[0-9]{4}/)
+        const year = group ? Number(group[0]) : undefined
+
+        // Second approach to get the year
+        return year ? year : Number($('#titleYear > a').text())
     }
 
     private scrapDuration($: CheerioStatic): number
