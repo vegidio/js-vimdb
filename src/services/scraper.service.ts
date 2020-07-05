@@ -260,10 +260,10 @@ export default class ScraperService
                 number: Number($(el).find('meta').attr('content')),
                 identifier: $(el).find('div.wtw-option-standalone').attr('data-tconst'),
                 name: $(el).find('a[itemprop="name"]').text(),
-                summary: $(el).find('div[itemprop="description"]').text().trim(),
+                summary: this.scrapEpisodeSummary($(el)),
                 aggregateRating: {
                     ratingValue: Number($(el).find('span.ipl-rating-star__rating').html()
-                        .replace(',', '.')),
+                        ?.replace(',', '.') || '0'),
                     ratingCount: Number($(el).find('span.ipl-rating-star__total-votes').text()
                         .match(/[0-9]+/))
                 }
@@ -271,6 +271,12 @@ export default class ScraperService
         })
 
         return references
+    }
+
+    private scrapEpisodeSummary(el: Cheerio): string
+    {
+        const value = el.find('div[itemprop="description"]').html()
+        return value.includes('<a href') ? undefined : this.entities.decode(value).trim()
     }
     // endregion
 }

@@ -5,3 +5,6 @@ import { Reference, EpisodeReference } from './types'
 
 export default Imdb
 export { Movie, Series, Reference, EpisodeReference }
+
+const imdb = new Imdb()
+imdb.getAllShowData('tt7678620')
