@@ -42,8 +42,8 @@ describe('Bluey is correctly scraped (EN)', () =>
         expect(series.recommended).toContainEqual({ identifier: 'tt6688750', name: 'Puppy Dog Pals' })
     })
 
-    test('Genres are "Animation" and "Family"', () => {
-        expect(series.genre).toEqual(['Animation', 'Family'])
+    test('Genres are "Animation", "Short" and "Family"', () => {
+        expect(series.genre).toEqual(['Animation', 'Short', 'Family'])
     })
 
     test('The content rating is TV-Y', () => {
@@ -90,7 +90,7 @@ describe('Bluey is correctly scraped (EN)', () =>
         expect(series.seasons).toBeGreaterThanOrEqual(2)
     })
 
-    test('There are at least 600 episodes and one is "Queens"', () => {
+    test('There are at least 78 episodes and one is "Queens"', () => {
         expect(series.episodes.length).toBeGreaterThanOrEqual(78)
         expect(series.episodes).toContainEqual(expect.objectContaining({ identifier: 'tt12587834', name: 'Queens' }))
     })
