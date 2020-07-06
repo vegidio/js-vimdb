@@ -69,7 +69,8 @@ export default class ScraperService
         const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/episodes`)
 
         if (show instanceof Series) {
-            const seasons = Number($('#bySeason > option[selected]').val())
+            const temp = $('#bySeason > option[selected]').val()
+            const seasons = temp ? Number(temp) : undefined
             const promises: Promise<EpisodeReference[]>[] = []
             for (let i = 1; i <= seasons; i++) { promises.push(this.scrapSeason(identifier, i)) }
 
@@ -156,13 +157,13 @@ export default class ScraperService
     private scrapSummary($: CheerioStatic): string
     {
         const el = $('div.summary_text').html()
-        return el.includes('<a href') ? undefined : this.entities.decode(el).trim()
+        return !el || el.includes('<a') ? undefined : this.entities.decode(el).trim()
     }
 
     private scrapDescription($: CheerioStatic): string
     {
         const el = $('div#titleStoryLine').find('span:not([class])').html()
-        return el.includes('|') ? undefined : el.trim()
+        return el?.includes('|') ? undefined : el?.trim()
     }
 
     private scrapContentRating($: CheerioStatic): string
@@ -174,10 +175,12 @@ export default class ScraperService
     private scrapYear($: CheerioStatic): number
     {
         const group = $('a[title="See more release dates"]').text().match(/[0-9]{4}/)
-        const year = group ? Number(group[0]) : undefined
+        let year = group ? Number(group[0]) : undefined
 
         // Second approach to get the year
-        return year ? year : Number($('#titleYear > a').text())
+        year = year ? year : Number($('#titleYear > a').text())
+
+        return year == 0 ? undefined : year
     }
 
     private scrapDuration($: CheerioStatic): number
