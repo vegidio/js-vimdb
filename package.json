@@ -1,6 +1,6 @@
 {
     "name": "vimdb",
-    "version": "3.4.2",
+    "version": "3.4.4",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "ISC",
@@ -33,7 +33,7 @@
         "docs": "typedoc --options typedoc.json --disableSources",
         "build": "webpack",
         "lint": "eslint . --ext .ts",
-        "test": "jest"
+        "test": "jest --runInBand"
     },
     "repository": {
         "type": "git",

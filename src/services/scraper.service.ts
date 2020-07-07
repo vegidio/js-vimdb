@@ -215,8 +215,7 @@ export default class ScraperService
     private scrapImages($: CheerioStatic): { small: string, big: string }
     {
         const small = $('div.poster > a > img').attr('src')
-        const big = small ? small.replace('_V1_UX182_CR0,0,182,268_AL_.jpg',
-            '_V1_SY1000_CR0,0,666,1000_AL_.jpg') : undefined
+        const big = small ? small.replace(/_V1_(.+)\.jpg/, '_V1_.jpg') : undefined
 
         return { small: small, big: big }
     }
