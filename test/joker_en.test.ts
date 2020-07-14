@@ -54,6 +54,10 @@ describe('Joker is correctly scraped (EN)', () =>
         expect(movie.year).toEqual(2019)
     })
 
+    test('Small and big posters are different', () => {
+        expect(movie.image.small).not.toEqual(movie.image.big)
+    })
+
     test('Small poster is an image', () => {
         return fetch(movie.image.small)
             .then(response => response.buffer())
@@ -72,7 +76,7 @@ describe('Joker is correctly scraped (EN)', () =>
             })
     })
 
-    test('Director is "Todd Phillips"', () => {
+    test('Director is Todd Phillips', () => {
         expect(movie.credits.directors).toContainEqual({ identifier: 'nm0680846', name: 'Todd Phillips' })
     })
 

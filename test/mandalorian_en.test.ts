@@ -37,4 +37,9 @@ describe('The Mandalorian is correctly scraped (EN)', () =>
         expect(series.episodes.length).toBeGreaterThanOrEqual(8)
         expect(series.episodes).toContainEqual(expect.objectContaining({ identifier: 'tt9121530', name: 'Chapter 2: The Child' }))
     })
+
+    test('All episodes aggregated ratings are valid numbers', () => {
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingValue))).toEqual(true)
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingCount))).toEqual(true)
+    })
 })

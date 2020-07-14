@@ -58,6 +58,10 @@ describe('Os Simpsons is correctly scraped (PT-BR)', () =>
         expect(series.year).toEqual(1989)
     })
 
+    test('Small and big posters are different', () => {
+        expect(series.image.small).not.toEqual(series.image.big)
+    })
+
     test('Small poster is an image', () => {
         return fetch(series.image.small)
             .then(response => response.buffer())
@@ -98,5 +102,10 @@ describe('Os Simpsons is correctly scraped (PT-BR)', () =>
     test('There are at least 600 episodes and one is "Treehouse of Horror"', () => {
         expect(series.episodes.length).toBeGreaterThan(600)
         expect(series.episodes).toContainEqual(expect.objectContaining({ identifier: 'tt0701278', name: 'Treehouse of Horror' }))
+    })
+
+    test('All episodes aggregated ratings are valid numbers', () => {
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingValue))).toEqual(true)
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingCount))).toEqual(true)
     })
 })

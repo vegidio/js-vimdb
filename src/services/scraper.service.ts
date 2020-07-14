@@ -163,7 +163,7 @@ export default class ScraperService
     private scrapDescription($: CheerioStatic): string
     {
         const el = $('div#titleStoryLine').find('span:not([class])').html()
-        return el?.includes('|') ? undefined : el?.trim()
+        return el?.includes('|') ? undefined : this.entities.decode(el).trim()
     }
 
     private scrapContentRating($: CheerioStatic): string
@@ -304,8 +304,7 @@ export default class ScraperService
                 name: $(el).find('a[itemprop="name"]').text(),
                 summary: this.scrapEpisodeSummary($(el)),
                 aggregateRating: {
-                    ratingValue: Number($(el).find('span.ipl-rating-star__rating').html()
-                        ?.replace(',', '.') || '0'),
+                    ratingValue: Number($(el).find('span.ipl-rating-star__rating').html()),
                     ratingCount: Number($(el).find('span.ipl-rating-star__total-votes').text()
                         .match(/[0-9]+/))
                 }

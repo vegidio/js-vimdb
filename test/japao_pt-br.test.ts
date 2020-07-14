@@ -45,6 +45,10 @@ describe('Meu Japão Brasileiro is correctly scraped (PT-BR)', () =>
         expect(movie.year).toEqual(1965)
     })
 
+    test('Small and big posters are different', () => {
+        expect(movie.image.small).not.toEqual(movie.image.big)
+    })
+
     test('Small poster is an image', () => {
         return fetch(movie.image.small)
             .then(response => response.buffer())

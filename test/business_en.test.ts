@@ -58,6 +58,10 @@ describe('The Business is correctly scraped (EN)', () =>
         expect(series.year).toEqual(2013)
     })
 
+    test('Small and big posters are different', () => {
+        expect(series.image.small).not.toEqual(series.image.big)
+    })
+
     test('Small poster is an image', () => {
         return fetch(series.image.small)
             .then(response => response.buffer())
@@ -98,5 +102,10 @@ describe('The Business is correctly scraped (EN)', () =>
     test('There are 51 episodes and one is "Acordo"', () => {
         expect(series.episodes.length).toEqual(51)
         expect(series.episodes).toContainEqual(expect.objectContaining({ identifier: 'tt4030492', name: 'Acordo' }))
+    })
+
+    test('All episodes aggregated ratings are valid numbers', () => {
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingValue))).toEqual(true)
+        expect(series.episodes.every(ep => !Number.isNaN(ep.aggregateRating.ratingCount))).toEqual(true)
     })
 })

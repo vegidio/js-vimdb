@@ -1,7 +1,7 @@
-# vegidio/vimdb
+# vimdb
 
-[![GitHub Actions](https://img.shields.io/github/workflow/status/vegidio/nodejs-vimdb/test?label=tests)](https://github.com/vegidio/nodejs-vimdb/actions)
-[![Codecov](https://img.shields.io/codecov/c/github/vegidio/nodejs-vimdb)](https://codecov.io/gh/vegidio/nodejs-vimdb)
+[![GitHub Actions](https://img.shields.io/github/workflow/status/vegidio-node/vimdb/test?label=tests)](https://github.com/vegidio-node/vimdb/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/vegidio-node/vimdb)](https://codecov.io/gh/vegidio-node/vimdb)
 [![NPM Downloads](https://img.shields.io/npm/dt/vimdb.svg)](https://www.npmjs.com/package/vimdb)
 [![TypeScript](https://img.shields.io/npm/types/vimdb.svg)](https://www.typescriptlang.org)
 [![ISC License](https://img.shields.io/npm/l/vimdb?color=important)](LICENSE.txt)
