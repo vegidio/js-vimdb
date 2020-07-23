@@ -19,7 +19,7 @@ describe('Search for "Dragon Ball" (EN)', () =>
         expect(results.length).toBe(200)
     })
 
-    test('One of the results is "Presença de Anita"', () => {
+    test('One of the results is "Dragon Ball Z"', () => {
         expect(results).toContainEqual({ identifier: 'tt0121220', name: 'Dragon Ball Z' })
     })
 })
