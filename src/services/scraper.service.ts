@@ -31,6 +31,7 @@ export default class ScraperService
     {
         // Setup the variables needed for fetch
         const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}`)
+        if (!show) throw Error('Failed to get the show\'s info.')
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
@@ -53,6 +54,7 @@ export default class ScraperService
     {
         // Setup the variables needed for fetch
         const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/fullcredits`)
+        if (!show) throw Error('Failed to get the show\'s credits.')
 
         show.credits = {
             directors: this.scrapDirectors($),
@@ -67,6 +69,7 @@ export default class ScraperService
     {
         // Setup the variables needed for fetch
         const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/episodes`)
+        if (!show) throw Error('Failed to get the series\' episodes.')
 
         if (show instanceof Series) {
             const temp = $('#bySeason > option[selected]').val()
@@ -116,7 +119,9 @@ export default class ScraperService
     private async setupFetch(identifier: string, url: string): Promise<[CheerioStatic, Movie | Series]>
     {
         const html = await fetch(url, { headers: this.headers })
-            .then(response => response.text())
+            .then(response => response.status == 200 ? response.text() : undefined)
+
+        if (!html) return [undefined, undefined]
 
         // Saves a copy of the HTML for debug purposes
         if(this.isDebugMode) this.saveHtml(identifier, url, html)

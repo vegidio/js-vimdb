@@ -115,15 +115,21 @@ export default class Imdb
         Promise<Movie | Series>
     {
         const promises = []
-        if (type.main || type.main == undefined) promises.push(this.getShow(identifier))
-        if (type.credits || type.credits == undefined) promises.push(this.getShowCredits(identifier))
-        if (type.episodes || type.episodes == undefined) promises.push(this.getSeriesEpisodes(identifier))
+        type.main ??= true
+        type.credits ??= true
+        type.episodes ??= true
 
-        return Promise.all(promises).then(shows => {
-            return (shows[0] instanceof Series) ?
-                Series.fromObject(Object.assign({}, ...shows)) :
-                Movie.fromObject(Object.assign({}, ...shows))
-        })
+        if (type.main) promises.push(this.getShow(identifier))
+        if (type.credits) promises.push(this.getShowCredits(identifier))
+
+        const mainAndCredits = await Promise.all(promises)
+
+        if (mainAndCredits[0] instanceof Series) {
+            const episodes = type.episodes ? await this.getSeriesEpisodes(identifier) : {}
+            return Series.fromObject(Object.assign({}, ...mainAndCredits, episodes))
+        } else {
+            return Movie.fromObject(Object.assign({}, ...mainAndCredits))
+        }
     }
 
     /**
