@@ -15,8 +15,8 @@ describe('Search for "Dragon Ball" (EN)', () =>
         results = await imdb.search('Dragon Ball')
     })
 
-    test('There are 200 results', () => {
-        expect(results.length).toBe(200)
+    test('There are 175 results', () => {
+        expect(results.length).toBeGreaterThanOrEqual(175)
     })
 
     test('One of the results is "Dragon Ball Z"', () => {
