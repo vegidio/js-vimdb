@@ -1,11 +1,12 @@
 import ScraperService from '../services/scraper.service'
 import Movie from '../models/movie.model'
 import Series from '../models/series.model'
+import Person from '../models/person.model'
 import { Reference } from '../types'
 import { SearchType } from '../enums'
 
 /**
- * The type of data that must be fetched.
+ * The type of data that must be fetched from shows.
  *
  * @param {boolean} [main=true] - main show info.
  * @param {boolean} [credits=true] - show credits.
@@ -130,6 +131,24 @@ export default class Imdb
         } else {
             return Movie.fromObject(Object.assign({}, ...mainAndCredits))
         }
+    }
+
+    /**
+     * Scrap the main information of a person, like name, job titles, filmography, etc.
+     *
+     * ```typescript
+     * // Get information about the actress "Scarlett Johansson"
+     * imdb.getShow('nm0424060')
+     *     .then(console.log)
+     * ```
+     *
+     * @async
+     * @param {string} identifier - the unique identifier for a person.
+     * @return {@link Person} - object presenting a person.
+     */
+    async getPerson(identifier: string): Promise<Person>
+    {
+        return this.scraper.fetchPerson(identifier)
     }
 
     /**

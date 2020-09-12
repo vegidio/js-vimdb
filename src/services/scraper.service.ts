@@ -1,11 +1,12 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import fetch, { Headers} from 'node-fetch'
+import fetch, { Headers } from 'node-fetch'
 import * as cheerio from 'cheerio'
 import { AllHtmlEntities } from 'html-entities'
 
 import Movie from '../models/movie.model'
 import Series from '../models/series.model'
+import Person from '../models/person.model'
 import { EpisodeReference, Reference } from '../types'
 import { SearchType } from '../enums'
 
@@ -30,12 +31,12 @@ export default class ScraperService
     async fetchShowInfo(identifier: string): Promise<Movie | Series>
     {
         // Setup the variables needed for fetch
-        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}`)
+        const [$, show] = await this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}`)
         if (!show) throw Error('Failed to get the show\'s info.')
 
         show.identifier = identifier
         show.url = `https://www.imdb.com/title/${identifier}`
-        show.name = this.scrapName($)
+        show.name = this.scrapShowName($)
         show.alternativeName = this.scrapAlternativeName($)
         show.summary = this.scrapSummary($)
         show.description = this.scrapDescription($)
@@ -44,7 +45,7 @@ export default class ScraperService
         show.duration = this.scrapDuration($)
         show.aggregateRating = this.scrapRating($)
         show.genre = this.scrapGenre($)
-        show.image = this.scrapImages($)
+        show.image = this.scrapShowImages($)
         show.recommended = this.scrapRecommended($)
 
         return show
@@ -53,7 +54,7 @@ export default class ScraperService
     async fetchShowCredits(identifier: string): Promise<Movie | Series>
     {
         // Setup the variables needed for fetch
-        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/fullcredits`)
+        const [$, show] = await this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}/fullcredits`)
         if (!show) throw Error('Failed to get the show\'s credits.')
 
         show.credits = {
@@ -68,7 +69,7 @@ export default class ScraperService
     async fetchSeriesEpisodes(identifier: string): Promise<Movie | Series>
     {
         // Setup the variables needed for fetch
-        const [$, show] = await this.setupFetch(identifier, `https://www.imdb.com/title/${identifier}/episodes`)
+        const [$, show] = await this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}/episodes`)
         if (!show) throw Error('Failed to get the series\' episodes.')
 
         if (show instanceof Series) {
@@ -84,6 +85,27 @@ export default class ScraperService
         return show
     }
 
+    async fetchPerson(identifier: string): Promise<Person>
+    {
+        // Setup the variables needed for fetch
+        const [$, person] = await this.setupFetchPerson(identifier, `https://www.imdb.com/name/${identifier}`)
+        if (!person) throw Error('Failed to get the person\'s info.')
+
+        person.identifier = identifier
+        person.url = `https://www.imdb.com/name/${identifier}`
+        person.name = this.scrapPersonName($)
+        person.jobs = this.scrapJobs($)
+        person.birthday = this.scrapBirthday($)
+        person.image = this.scrapPersonImages($)
+        person.filmography = {
+            knownFor: this.scrapFilmographyKnownFor($),
+            actor: this.scrapFilmographyActor($),
+            director: this.scrapFilmographyDirector($),
+        }
+
+        return person
+    }
+
     async search(query: string, type: SearchType): Promise<Reference[]>
     {
         const url = `https://www.imdb.com/find?q=${encodeURIComponent(query)}&s=${type}`
@@ -92,9 +114,17 @@ export default class ScraperService
 
         const result: Reference[] = []
         $('tr.findResult').each((_, el) => {
+            let identifier: string
+            if (type === SearchType.Title) {
+                identifier = $(el).find('td.primary_photo > a').attr('href')
+                    .match(/title\/(.+)\//)[1]
+            } else {
+                identifier = $(el).find('td.primary_photo > a').attr('href')
+                    .match(/name\/(.+)\//)[1]
+            }
+
             result.push({
-                identifier: $(el).find('td.primary_photo > a').attr('href')
-                    .match(/title\/(.+)\//)[1],
+                identifier: identifier,
                 name: $(el).find('td.result_text > a').text()
             })
         })
@@ -116,22 +146,37 @@ export default class ScraperService
         return userAgents[Math.floor(Math.random() * userAgents.length)]
     }
 
-    private async setupFetch(identifier: string, url: string): Promise<[CheerioStatic, Movie | Series]>
+    private async setupFetchShow(identifier: string, url: string): Promise<[CheerioStatic, Movie | Series]>
     {
-        const html = await fetch(url, { headers: this.headers })
-            .then(response => response.status == 200 ? response.text() : undefined)
-
-        if (!html) return [undefined, undefined]
-
-        // Saves a copy of the HTML for debug purposes
-        if(this.isDebugMode) this.saveHtml(identifier, url, html)
-        const $ = cheerio.load(html)
+        const $ = await this.setupFetch(identifier, url)
+        if (!$) return [undefined, undefined]
 
         // Determine the show type
         const type = $('meta[property="og:type"]').attr('content')
         const show = (type && type.split('.')[1] === 'tv_show') ? new Series() : new Movie()
 
         return [$, show]
+    }
+
+    private async setupFetchPerson(identifier: string, url: string): Promise<[CheerioStatic, Person]>
+    {
+        const $ = await this.setupFetch(identifier, url)
+        if (!$) return [undefined, undefined]
+
+        return [$, new Person()]
+    }
+
+    private async setupFetch(identifier: string, url: string): Promise<CheerioStatic>
+    {
+        const html = await fetch(url, { headers: this.headers })
+            .then(response => response.status == 200 ? response.text() : undefined)
+
+        if (!html) return undefined
+
+        // Saves a copy of the HTML for debug purposes
+        if(this.isDebugMode) this.saveHtml(identifier, url, html)
+
+        return cheerio.load(html)
     }
 
     private saveHtml(identifier: string, url: string, html: string)
@@ -146,7 +191,7 @@ export default class ScraperService
     // endregion
 
     // region - Show Info
-    private scrapName($: CheerioStatic): string
+    private scrapShowName($: CheerioStatic): string
     {
         const el = $('div.title_wrapper > h1').html()
         const name = el.includes('<span') ? el.match(/(.+)<span/)[1] : el.trim()
@@ -217,7 +262,7 @@ export default class ScraperService
         return genre
     }
 
-    private scrapImages($: CheerioStatic): { small: string, big: string }
+    private scrapShowImages($: CheerioStatic): { small: string, big: string }
     {
         const small = $('div.poster > a > img').attr('src')
         const big = small ? small.replace(/_V1_(.+)\.jpg/, '_V1_.jpg') : undefined
@@ -323,6 +368,98 @@ export default class ScraperService
     {
         const value = el.find('div[itemprop="description"]').html()
         return value.includes('<a href') ? undefined : this.entities.decode(value).trim()
+    }
+    // endregion
+
+    // region - Person
+    private scrapPersonName($: CheerioStatic): string
+    {
+        const el = $('#name-overview-widget-layout').find('span')
+        return this.entities.decode(el.html()).trim()
+    }
+
+    private scrapJobs($: CheerioStatic): string[]
+    {
+        const jobs: string[] = []
+        $('#name-job-categories > a > span').each((_, el) => {
+            jobs.push($(el).html().trim())
+        })
+
+        return jobs
+    }
+
+    private scrapBirthday($: CheerioStatic): Date
+    {
+        const dateStr = $('#name-born-info > time').attr('datetime')
+            .split('-').map(value => Number(value))
+        return new Date(Date.UTC(dateStr[0], dateStr[1], dateStr[2]))
+    }
+
+    private scrapFilmographyKnownFor($: CheerioStatic): Reference[]
+    {
+        const shows: Reference[] = []
+        $('div.knownfor-title-role > a')
+            .each((_, el) => {
+                shows.push({
+                    identifier: $(el).attr('href').match(/title\/(.+)\//)[1],
+                    name: this.entities.decode($(el).html()).trim()
+                })
+            })
+
+        return shows
+    }
+
+    private scrapFilmographyActor($: CheerioStatic): Reference[]
+    {
+        const shows: Reference[] = []
+
+        $('#filmo-head-actor')
+            .next('div.filmo-category-section')
+            .find('div > b > a')
+            .each((_, el) => {
+                shows.push({
+                    identifier: $(el).attr('href').match(/title\/(.+)\//)[1],
+                    name: this.entities.decode($(el).html()).trim()
+                })
+            })
+
+        if (shows.length > 0) return shows
+
+        $('#filmo-head-actress')
+            .next('div.filmo-category-section')
+            .find('div > b > a')
+            .each((_, el) => {
+                shows.push({
+                    identifier: $(el).attr('href').match(/title\/(.+)\//)[1],
+                    name: this.entities.decode($(el).html()).trim()
+                })
+            })
+
+        return shows
+    }
+
+    private scrapFilmographyDirector($: CheerioStatic): Reference[]
+    {
+        const shows: Reference[] = []
+        $('#filmo-head-director')
+            .next('div.filmo-category-section')
+            .find('div > b > a')
+            .each((_, el) => {
+                shows.push({
+                    identifier: $(el).attr('href').match(/title\/(.+)\//)[1],
+                    name: this.entities.decode($(el).html()).trim()
+                })
+            })
+
+        return shows
+    }
+
+    private scrapPersonImages($: CheerioStatic): { small: string, big: string }
+    {
+        const small = $('#name-poster').attr('src')
+        const big = small ? small.replace(/_V1_(.+)\.jpg/, '_V1_.jpg') : undefined
+
+        return { small: small, big: big }
     }
     // endregion
 }
