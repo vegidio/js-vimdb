@@ -33,7 +33,7 @@ describe('Search for "Presença de Anita" (EN)', () =>
     })
 
     test('There are 18 results', () => {
-        expect(results.length).toBe(18)
+        expect(results.length).toBeGreaterThanOrEqual(18)
     })
 
     test('One of the results is "Presença de Anita"', () => {
