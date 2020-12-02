@@ -1,56 +1,55 @@
-import { Reference } from '../types'
+import { Reference } from '../types';
 
 /**
  * Represents a Show, with information about a Movie or Series.
  * @ignore
  */
-export default abstract class Show
-{
+export default abstract class Show {
     /** Unique identifier for the show */
-    identifier: string
+    identifier: string;
 
     /** Name of the show */
-    name: string
+    name: string;
 
     /** Summary of the show */
-    summary: string
+    summary: string;
 
     /** The duration of the show, in minutes */
-    duration: number
+    duration: number;
 
     aggregateRating: {
         /** The mean value of all votes given to the show */
-        ratingValue: number,
+        ratingValue: number;
 
         /** The number of votes given to the show */
-        ratingCount: number
-    }
+        ratingCount: number;
+    };
 
     /** Some genres that can be used to classify this show */
-    genre: string[]
+    genre: string[];
 
     image: {
         /** URL to a low resolution version of the show's image */
-        small: string,
+        small: string;
 
         /** URL to a high resolution version of the show's image */
-        big: string
-    }
+        big: string;
+    };
 
     /** The content rating of the show */
-    contentRating: string
+    contentRating: string;
 
     /** URL to the show on IMDb */
-    url: string
+    url: string;
 
     credits: {
         /** Array of references to all directors of the show */
-        directors: Reference[],
+        directors: Reference[];
 
         /** Array of references to all writers of the show */
-        writers: Reference[],
+        writers: Reference[];
 
         /** Array of references to the cast of the show */
-        cast: Reference[]
-    }
+        cast: Reference[];
+    };
 }

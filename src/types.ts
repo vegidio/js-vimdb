@@ -3,32 +3,32 @@
  */
 type Reference = {
     /** Unique identifier for movies, series or people */
-    identifier: string
+    identifier: string;
 
     /** Name of the show or person */
-    name: string
-}
+    name: string;
+};
 
 /**
  * Represents a reference to a Episode.
  */
 type EpisodeReference = Reference & {
     /** The episode's season */
-    season: number
+    season: number;
 
     /** The episode's number */
-    number: number
+    number: number;
 
     /** Summary of the episode */
-    summary: string
+    summary: string;
 
     aggregateRating: {
         /** The mean value of all votes given to the episode */
-        ratingValue: number
+        ratingValue: number;
 
         /** The number of votes given to the episode */
-        ratingCount: number
-    }
-}
+        ratingCount: number;
+    };
+};
 
-export { Reference, EpisodeReference }
+export { Reference, EpisodeReference };

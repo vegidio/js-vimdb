@@ -1,26 +1,25 @@
-import Show from './show.model'
-import { Reference } from '../types'
+import Show from './show.model';
+import { Reference } from '../types';
 
 /**
  * Represents a Movie.
  * @category Model
  */
-export default class Movie extends Show
-{
+export default class Movie extends Show {
     /** An alternative name of the movie, if it exists */
-    alternativeName: string
+    alternativeName: string;
 
     /** Summary of the movie */
-    summary: string
+    summary: string;
 
     /** Description of the movie */
-    description: string
+    description: string;
 
     /** Array of references to other movies or series that are similar to this one */
-    recommended: Reference[]
+    recommended: Reference[];
 
     /** The year when the movie was released */
-    year: number
+    year: number;
 
     /**
      * Creates an instance of {@link Movie} from a raw JS object.
@@ -28,9 +27,8 @@ export default class Movie extends Show
      * @param {unknown} obj - JS object from where the Movie instance will be created.
      * @return {@link Movie} - object presenting a movie.
      */
-    static fromObject(obj: unknown): Movie
-    {
-        const movie = new Movie()
-        return Object.assign(movie, obj)
+    static fromObject(obj: unknown): Movie {
+        const movie = new Movie();
+        return Object.assign(movie, obj);
     }
 }

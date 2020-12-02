@@ -4,10 +4,9 @@
         "coverage/**",
         "docs/**"
     ],
-    "inputFiles": [
+    "entryPoints": [
         "src"
     ],
-    "mode": "file",
     "out": "docs",
     "plugin": [],
     "readme": "none"

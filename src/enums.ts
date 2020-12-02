@@ -1,6 +1,6 @@
 enum SearchType {
     Title = 'tt',
-    Name = 'nm'
+    Name = 'nm',
 }
 
-export { SearchType }
+export { SearchType };

@@ -7,7 +7,8 @@
         "node": true
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "extends": [
         "eslint:recommended",
@@ -15,8 +16,6 @@
         "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        "no-console": "error",
-        "quotes": ["error", "single", { "avoidEscape": true }],
-        "semi": ["error", "never"]
+        "prettier/prettier": "warn"
     }
 }
