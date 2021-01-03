@@ -40,8 +40,8 @@ describe('Meu Japão Brasileiro is correctly scraped (PT-BR)', () => {
         expect(movie.genre).toEqual(['Comedy']);
     });
 
-    test('The release year is 1965', () => {
-        expect(movie.year).toEqual(1965);
+    test('The release year is 1964', () => {
+        expect(movie.year).toEqual(1964);
     });
 
     test('Small and big posters are different', () => {
