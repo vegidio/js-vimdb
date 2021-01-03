@@ -1,0 +1,33 @@
+name: cron
+
+on:
+  schedule:
+    # For more: https://crontab.guru
+    - cron: '0 0 1 * *'
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
+    steps:
+      - name: Set-up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Upgrade the packages
+        run: |
+          npm install -g npm-check-updates
+          if ! ncu -u -e 2; then
+            yarn version --no-commit-hooks --no-git-tag-version --patch
+            git config --global user.name "Vinícius Egidio"
+            git config --global user.email "me@vinicius.io"
+            git add package.json
+            git commit -m "⬆️ Upgraded NPM packages"
+            git push
+          fi

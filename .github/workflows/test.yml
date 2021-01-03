@@ -2,10 +2,11 @@ name: test
 
 on:
   schedule:
+    # For more: https://crontab.guru
     - cron: '0 10 * * *'
 
 jobs:
-  push:
+  test:
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{secrets.NPM_TOKEN}}
