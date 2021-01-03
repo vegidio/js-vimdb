@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import fetch, { Headers } from 'node-fetch';
 import * as cheerio from 'cheerio';
-import { AllHtmlEntities } from 'html-entities';
+import { decode } from 'html-entities';
 
 import Movie from '../models/movie.model';
 import Series from '../models/series.model';
@@ -17,13 +17,11 @@ export default class ScraperService {
     private readonly language: string;
     private readonly isDebugMode: boolean;
     private readonly headers: Headers;
-    private readonly entities: AllHtmlEntities;
 
     constructor(language: string, debug: boolean) {
         this.language = language;
         this.isDebugMode = debug;
         this.headers = new Headers({ 'Accept-Language': language, 'User-Agent': this.randomUserAgent() });
-        this.entities = new AllHtmlEntities();
     }
 
     async fetchShowInfo(identifier: string): Promise<Movie | Series> {
@@ -189,22 +187,22 @@ export default class ScraperService {
     private scrapShowName($: cheerio.Root): string {
         const el = $('div.title_wrapper > h1').html();
         const name = el.includes('<span') ? el.match(/(.+)<span/)[1] : el.trim();
-        return this.entities.decode(name).trim();
+        return decode(name).trim();
     }
 
     private scrapAlternativeName($: cheerio.Root): string {
         const el = $('div.originalTitle').html();
-        return el ? this.entities.decode(el.match(/(.+)<span/)[1]) : undefined;
+        return el ? decode(el.match(/(.+)<span/)[1]) : undefined;
     }
 
     private scrapSummary($: cheerio.Root): string {
         const el = $('div.summary_text').html();
-        return !el || el.includes('<a') ? undefined : this.entities.decode(el).trim();
+        return !el || el.includes('<a') ? undefined : decode(el).trim();
     }
 
     private scrapDescription($: cheerio.Root): string {
         const el = $('div#titleStoryLine').find('span:not([class])').html();
-        return el?.includes('|') ? undefined : this.entities.decode(el).trim();
+        return el?.includes('|') ? undefined : decode(el).trim();
     }
 
     private scrapContentRating($: cheerio.Root): string {
@@ -359,14 +357,14 @@ export default class ScraperService {
 
     private scrapEpisodeSummary(el: cheerio.Cheerio): string {
         const value = el.find('div[itemprop="description"]').html();
-        return value.includes('<a href') ? undefined : this.entities.decode(value).trim();
+        return value.includes('<a href') ? undefined : decode(value).trim();
     }
     // endregion
 
     // region - Person
     private scrapPersonName($: cheerio.Root): string {
         const el = $('#name-overview-widget-layout').find('span');
-        return this.entities.decode(el.html()).trim();
+        return decode(el.html()).trim();
     }
 
     private scrapJobs($: cheerio.Root): string[] {
@@ -393,7 +391,7 @@ export default class ScraperService {
                 identifier: $(el)
                     .attr('href')
                     .match(/title\/(.+)\//)[1],
-                name: this.entities.decode($(el).html()).trim(),
+                name: decode($(el).html()).trim(),
             });
         });
 
@@ -411,7 +409,7 @@ export default class ScraperService {
                     identifier: $(el)
                         .attr('href')
                         .match(/title\/(.+)\//)[1],
-                    name: this.entities.decode($(el).html()).trim(),
+                    name: decode($(el).html()).trim(),
                 });
             });
 
@@ -425,7 +423,7 @@ export default class ScraperService {
                     identifier: $(el)
                         .attr('href')
                         .match(/title\/(.+)\//)[1],
-                    name: this.entities.decode($(el).html()).trim(),
+                    name: decode($(el).html()).trim(),
                 });
             });
 
@@ -442,7 +440,7 @@ export default class ScraperService {
                     identifier: $(el)
                         .attr('href')
                         .match(/title\/(.+)\//)[1],
-                    name: this.entities.decode($(el).html()).trim(),
+                    name: decode($(el).html()).trim(),
                 });
             });
 
