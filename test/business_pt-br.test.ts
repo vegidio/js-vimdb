@@ -36,9 +36,9 @@ describe('O Negócio is correctly scraped (PT-BR)', () => {
         expect(series.aggregateRating.ratingCount).not.toBeNaN();
     });
 
-    test('There are 12 recommendations and one is "Me Chama de Bruna"', () => {
+    test('There are 12 recommendations and one is "Magnífica 70"', () => {
         expect(series.recommended.length).toEqual(12);
-        expect(series.recommended).toContainEqual({ identifier: 'tt5210146', name: 'Me Chama de Bruna' });
+        expect(series.recommended).toContainEqual({ identifier: 'tt4725820', name: 'Magnífica 70' });
     });
 
     test('Genres are "Comedy" and "Drama"', () => {
