@@ -23,6 +23,7 @@ jobs:
 
       - name: Test the scraper
         run: |
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
           yarn
           yarn test
 

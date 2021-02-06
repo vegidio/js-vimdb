@@ -19,9 +19,12 @@ jobs:
 
       - name: Checkout the code
         uses: actions/checkout@v2
+        with:
+          token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
       - name: Upgrade the packages
         run: |
+          echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
           npm install -g npm-check-updates
           if ! ncu -u -e 2; then
             yarn version --no-commit-hooks --no-git-tag-version --patch
