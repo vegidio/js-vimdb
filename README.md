@@ -77,7 +77,7 @@ And the response should be something similar to this:
 
 ### Documentation
 
-For detailed information on how to use this package, please check the [API reference](https://vegidio-node.github.io/vimdb) for more examples.
+For detailed information on how to use this package, please check the [API reference](https://vegidio-js.github.io/vimdb) for more examples.
 
 ## 📝 License
 
