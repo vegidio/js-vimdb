@@ -40,7 +40,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/vegidio-node/vimdb"
+        "url": "https://github.com/vegidio-js/vimdb"
     },
     "keywords": [
         "imdb",
