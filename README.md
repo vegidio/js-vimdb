@@ -79,6 +79,10 @@ And the response should be something similar to this:
 
 For detailed information on how to use this package, please check the [API reference](https://vegidio-js.github.io/vimdb) for more examples.
 
+## 🙏🏾 Donations
+
+If you like this project then please consider [becoming a sponsor](https://github.com/sponsors/vegidio). Your contribution will help me dedicate more time working on bugs and new features for this and other projects.
+
 ## 📝 License
 
 **vimdb** is released under the ISC License. See [LICENSE](LICENSE.txt) for details.
