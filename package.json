@@ -1,6 +1,6 @@
 {
     "name": "vimdb",
-    "version": "3.5.5",
+    "version": "3.5.6",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "ISC",
