@@ -35,8 +35,8 @@ describe('Search for "Bob" (EN)', () => {
         expect(results.length).toBe(200);
     });
 
-    test('One of the results is "Bob Odenkirk" and "Kathy Bates"', () => {
+    test('One of the results is "Bob Odenkirk" and "Robert Downey Jr."', () => {
         expect(results).toContainEqual({ identifier: 'nm0644022', name: 'Bob Odenkirk' });
-        expect(results).toContainEqual({ identifier: 'nm0000870', name: 'Kathy Bates' });
+        expect(results).toContainEqual({ identifier: 'nm0000375', name: 'Robert Downey Jr.' });
     });
 });
