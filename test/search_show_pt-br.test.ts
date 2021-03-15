@@ -47,7 +47,7 @@ describe('Search for "Две девицы на мели" (PT-BR)', () => {
     });
 
     test('There is 1 result', () => {
-        expect(results.length).toBe(1);
+        expect(results.length).toBeGreaterThanOrEqual(1);
     });
 
     test('One of the results is "Две девицы на мели"', () => {
