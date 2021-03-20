@@ -15,12 +15,12 @@ describe('The Business is correctly scraped (EN)', () => {
         expect(series).toBeInstanceOf(Series);
     });
 
-    test('Name is "The Business"', () => {
-        expect(series.name).toEqual('The Business');
+    test('Name is "O Negócio"', () => {
+        expect(series.name).toEqual('O Negócio');
     });
 
-    test('Alternative name is "O Negócio"', () => {
-        expect(series.alternativeName).toEqual('O Negócio');
+    test('Alternative name is undefined', () => {
+        expect(series.alternativeName).toBeUndefined();
     });
 
     test('Summary is not empty', () => {
