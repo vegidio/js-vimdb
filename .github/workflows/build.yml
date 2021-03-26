@@ -17,10 +17,6 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: Install dependencies
-        run: |
-          yarn global add semver
-
       - name: Checkout the code
         uses: actions/checkout@v2
 
@@ -35,10 +31,16 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
 
-      - name: Build the package
+      - name: Check version
         run: |
           export TAG=$(git describe --abbrev=0 --tags)
-          yarn version --no-commit-hooks --no-git-tag-version --new-version $TAG
+          export VERSION=$(node -p "require('./package').version")
+          if [ "$TAG" != "$VERSION" ]; then
+            exit 1
+          fi
+
+      - name: Build the package
+        run: |
           yarn build
 
       - name: Upload package to the registry

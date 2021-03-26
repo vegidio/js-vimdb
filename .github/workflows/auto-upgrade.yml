@@ -19,6 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "$(yarn global bin)" >> $GITHUB_PATH
           yarn global add npm-check-updates semver
 
       - name: Checkout the code
@@ -26,15 +27,18 @@ jobs:
         with:
           token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
+      - name: Set Git user
+        run: |
+          git config --global user.name "Vinícius Egidio"
+          git config --global user.email "me@vinicius.io"
+
       - name: Upgrade the packages
         run: |
           export TAG=$(semver -i $(node -p "require('./package').version"))
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
           if ! ncu -u -e 2; then
-            yarn version --no-commit-hooks --no-git-tag-version --patch
-            git config --global user.name "Vinícius Egidio"
-            git config --global user.email "me@vinicius.io"
+            yarn version --no-commit-hooks --no-git-tag-version --new-version $TAG
             git add package.json
             git commit -m "⬆️ Upgraded NPM packages"
             git tag $TAG
