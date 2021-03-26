@@ -2,7 +2,7 @@
 *
 
 # Except...
-!lib/**/*
+!dist/**/*
 !package.json
 !README.md
 !LICENSE.txt

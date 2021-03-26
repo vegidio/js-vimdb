@@ -5,4 +5,5 @@ import Person from './models/person.model';
 import { Reference, EpisodeReference } from './types';
 
 export default Imdb;
-export { Movie, Series, Person, Reference, EpisodeReference };
+export { Movie, Series, Person };
+export { Reference, EpisodeReference };

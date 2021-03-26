@@ -1,4 +1,5 @@
 .idea
+.parcel-cache
 
 # CMake
 cmake-build-*/
