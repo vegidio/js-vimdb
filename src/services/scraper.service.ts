@@ -66,8 +66,7 @@ export default class ScraperService {
         if (!show) throw Error("Failed to get the series' episodes.");
 
         if (show instanceof Series) {
-            const temp = $('#bySeason > option[selected]').val();
-            const seasons = temp ? Number(temp) : undefined;
+            const seasons = $('#bySeason').find('option:not([value="-1"])').length;
             const promises: Promise<EpisodeReference[]>[] = [];
             for (let i = 1; i <= seasons; i++) {
                 promises.push(this.scrapSeason(identifier, i));
