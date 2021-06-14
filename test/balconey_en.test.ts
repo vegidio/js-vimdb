@@ -1,10 +1,10 @@
 import Imdb, { Series } from '../src';
 
+jest.setTimeout(60_000);
 let series: Series;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('en', true);
+    const imdb = new Imdb('en-US', true);
     series = (await imdb.getAllShowData('tt12297330')) as Series;
 });
 

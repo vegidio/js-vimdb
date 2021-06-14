@@ -1,14 +1,19 @@
+// noinspection JSMethodCanBeStatic
+
 import * as fs from 'fs';
 import * as path from 'path';
 import fetch, { Headers } from 'node-fetch';
 import * as cheerio from 'cheerio';
 import { decode } from 'html-entities';
+import { DateTime, Duration } from 'luxon';
 
 import Movie from '../models/movie.model';
 import Series from '../models/series.model';
 import Person from '../models/person.model';
 import { EpisodeReference, Reference } from '../types';
 import { SearchType } from '../enums';
+
+import '../extensions/string';
 
 /**
  * @ignore
@@ -29,17 +34,19 @@ export default class ScraperService {
         const [$, show] = await this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}`);
         if (!show) throw Error("Failed to get the show's info.");
 
+        const json = JSON.parse($('script[type="application/ld+json"]').html());
+
         show.identifier = identifier;
         show.url = `https://www.imdb.com/title/${identifier}`;
         show.name = this.scrapShowName($);
         show.alternativeName = this.scrapAlternativeName($);
-        show.summary = this.scrapSummary($);
+        show.summary = this.scrapSummary(json);
         show.description = this.scrapDescription($);
-        show.contentRating = this.scrapContentRating($);
-        show.year = this.scrapYear($);
+        show.contentRating = this.scrapContentRating(json);
+        show.year = this.scrapYear(json);
         show.duration = this.scrapDuration($);
-        show.aggregateRating = this.scrapRating($);
-        show.genre = this.scrapGenre($);
+        show.aggregateRating = this.scrapRating(json);
+        show.genre = this.scrapGenre(json);
         show.image = this.scrapShowImages($);
         show.recommended = this.scrapRecommended($);
 
@@ -184,72 +191,58 @@ export default class ScraperService {
 
     // region - Show Info
     private scrapShowName($: cheerio.Root): string {
-        const el = $('div.title_wrapper > h1').html();
-        const name = el.includes('<span') ? el.match(/(.+)<span/)[1] : el.trim();
-        return decode(name).trim();
+        const value = $('h1[class^="TitleHeader"]').text();
+        return decode(value).trim();
     }
 
     private scrapAlternativeName($: cheerio.Root): string {
-        const el = $('div.originalTitle').html();
-        return el ? decode(el.match(/(.+)<span/)[1]) : undefined;
+        const value = $('div[class^="OriginalTitle"]').text().replace('Original title:', '');
+        return value ? decode(value).trim() : undefined;
     }
 
-    private scrapSummary($: cheerio.Root): string {
-        const el = $('div.summary_text').html();
-        return !el || el.includes('<a') ? undefined : decode(el).trim();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private scrapSummary(json: any): string {
+        return <string>json.description;
     }
 
     private scrapDescription($: cheerio.Root): string {
-        const el = $('div#titleStoryLine').find('span:not([class])').html();
-        return el?.includes('|') ? undefined : decode(el).trim();
+        const value = $('div[data-testid="storyline-plot-summary"] > div > div').html();
+        return value?.includes('<span') ? value.leftOf('<span') : value;
     }
 
-    private scrapContentRating($: cheerio.Root): string {
-        const group = $('div.subtext')
-            .html()
-            .trim()
-            .match(/(.+)\n/);
-        return group && !group[1].includes('<a') && !group[1].includes('<time') ? group[1] : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private scrapContentRating(json: any): string {
+        return <string>json.contentRating;
     }
 
-    private scrapYear($: cheerio.Root): number {
-        const group = $('a[title="See more release dates"]')
-            .text()
-            .match(/[0-9]{4}/);
-        let year = group ? Number(group[0]) : undefined;
-
-        // Second approach to get the year
-        year = year ? year : Number($('#titleYear > a').text());
-
-        return year == 0 ? undefined : year;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private scrapYear(json: any): number {
+        const dateStr = <string>json.datePublished;
+        const date = DateTime.fromISO(dateStr);
+        return date.year;
     }
 
     private scrapDuration($: cheerio.Root): number {
-        const duration = $('div.subtext > time').attr('datetime');
-        return duration ? Number(duration.match(/PT([0-9]+)M/)[1]) : undefined;
+        let value = $('li[data-testid="title-techspec_runtime"] > div > ul > li > span').text();
+        value = 'PT' + value.replace('h', 'H').replace('min', 'M').replace(' ', '');
+        return Duration.fromISO(value).as('minutes');
     }
 
-    private scrapRating($: cheerio.Root): { ratingValue: number; ratingCount: number } {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private scrapRating(json: any): { ratingValue: number; ratingCount: number } {
         return {
-            ratingValue: Number($('span[itemprop="ratingValue"]').text().replace(',', '.')),
-            ratingCount: Number($('span[itemprop="ratingCount"]').text().replace(/[,.]/, '')),
+            ratingValue: <number>json?.aggregateRating?.ratingValue,
+            ratingCount: <number>json?.aggregateRating?.ratingCount,
         };
     }
 
-    private scrapGenre($: cheerio.Root): string[] {
-        const genre: string[] = [];
-        $('#titleStoryLine > div.inline > h4')
-            .filter((_, el) => $(el).text() === 'Genres:')
-            .nextAll('a')
-            .each((_, el) => {
-                genre.push($(el).text().trim());
-            });
-
-        return genre;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private scrapGenre(json: any): string[] {
+        return <string[]>json.genre;
     }
 
     private scrapShowImages($: cheerio.Root): { small: string; big: string } {
-        const small = $('div.poster > a > img').attr('src');
+        const small = $('div[data-testid="hero-media__poster"] > div > img').attr('src');
         const big = small ? small.replace(/_V1_(.+)\.jpg/, '_V1_.jpg') : undefined;
 
         return { small: small, big: big };
@@ -257,14 +250,14 @@ export default class ScraperService {
 
     private scrapRecommended($: cheerio.Root): Reference[] {
         const shows: Reference[] = [];
-        $('div.rec_item').each((_, el) => {
-            let name = $(el).find('img').attr('title');
-            if (!name) name = $(el).find('div[class="gen_pane"]').text().trim();
+        $('div.ipc-sub-grid > div.ipc-poster-card').each((_, el) => {
+            const identifier = $(el)
+                .find('div > a')
+                .attr('href')
+                .match(/\/title\/(.+)\//)[1];
+            const name = $(el).find('div > a > span').text();
 
-            shows.push({
-                identifier: $(el).attr('data-tconst'),
-                name: name,
-            });
+            shows.push({ identifier, name });
         });
 
         return shows;
@@ -379,7 +372,7 @@ export default class ScraperService {
         const dateStr = $('#name-born-info > time')
             .attr('datetime')
             .split('-')
-            .map((value) => Number(value));
+            .map((value: string) => Number(value));
         return new Date(Date.UTC(dateStr[0], dateStr[1], dateStr[2]));
     }
 

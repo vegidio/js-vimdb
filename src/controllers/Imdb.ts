@@ -33,12 +33,12 @@ export default class Imdb {
      * ```
      *
      * @constructor
-     * @param {string} [language=en] - the language in witch you will get the results. Keep in mind that not all data is
-     * affected by the language choice.
+     * @param {string} [language=en-US] - the language in witch you will get the results. Keep in mind that not all data
+     * is affected by the language choice.
      * @param {boolean} [debug=false] - define if the data should be scraped in debug mode. While in debug mode, all
      * data scraped from the server will be saved locally in the folder `/scraps`.
      */
-    constructor(language = 'en', debug = false) {
+    constructor(language = 'en-US', debug = false) {
         this.scraper = new ScraperService(language, debug);
     }
 

@@ -1,9 +1,9 @@
 import Imdb, { Reference } from '../src';
 
+jest.setTimeout(60_000);
 let imdb: Imdb;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
     imdb = new Imdb('pt-br', true);
 });
 
@@ -51,6 +51,6 @@ describe('Search for "Две девицы на мели" (PT-BR)', () => {
     });
 
     test('One of the results is "Две девицы на мели"', () => {
-        expect(results).toContainEqual({ identifier: 'tt11715972', name: 'Dve devitsy na meli' });
+        expect(results).toContainEqual({ identifier: 'tt1845307', name: 'Duas Garotas em Apuros' });
     });
 });

@@ -1,10 +1,10 @@
 import Imdb, { Reference } from '../src';
 import { SearchType } from '../src/enums';
 
+jest.setTimeout(60_000);
 let imdb: Imdb;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
     imdb = new Imdb('pt-br', true);
 });
 

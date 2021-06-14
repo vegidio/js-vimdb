@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Series } from '../src';
 
+jest.setTimeout(60_000);
 let series: Series;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('pt-br', true);
+    const imdb = new Imdb('pt-BR', true);
     series = (await imdb.getAllShowData('tt0096697')) as Series;
 });
 
@@ -54,7 +54,7 @@ describe('Os Simpsons is correctly scraped (PT-BR)', () => {
     });
 
     test('The release year is 1989', () => {
-        expect(series.year).toEqual(1989);
+        expect(series.year).toEqual(1990);
     });
 
     test('Small and big posters are different', () => {

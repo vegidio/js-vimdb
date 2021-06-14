@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Series } from '../src';
 
+jest.setTimeout(60_000);
 let series: Series;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('pt-br', true);
+    const imdb = new Imdb('pt-BR', true);
     series = (await imdb.getAllShowData('tt2650940')) as Series;
 });
 
@@ -15,16 +15,16 @@ describe('O Negócio is correctly scraped (PT-BR)', () => {
         expect(series).toBeInstanceOf(Series);
     });
 
-    test('Name is "The Business"', () => {
+    test('Name is "O Negócio"', () => {
         expect(series.name).toEqual('O Negócio');
     });
 
-    test('Summary is not empty', () => {
-        expect(series.summary.length).not.toEqual(0);
+    test('Summary is correct', () => {
+        expect(series.summary).toContain('Karin, Magali and Luna are three call girls');
     });
 
-    test('Description is not empty', () => {
-        expect(series.description.length).not.toEqual(0);
+    test('Description is correct', () => {
+        expect(series.description).toContain('Marketing is the soul of any business');
     });
 
     test('Duration is 51 minutes', () => {
@@ -32,8 +32,8 @@ describe('O Negócio is correctly scraped (PT-BR)', () => {
     });
 
     test('Rating value and count are numbers', () => {
-        expect(series.aggregateRating.ratingValue).not.toBeNaN();
-        expect(series.aggregateRating.ratingCount).not.toBeNaN();
+        expect(series.aggregateRating.ratingValue).toBeGreaterThan(4);
+        expect(series.aggregateRating.ratingCount).toBeGreaterThan(1_000);
     });
 
     test('There are 12 recommendations and one is "Magnífica 70"', () => {

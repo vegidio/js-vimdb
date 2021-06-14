@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Movie } from '../src';
 
+jest.setTimeout(60_000);
 let movie: Movie;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('en', true);
+    const imdb = new Imdb('en-US', true);
     movie = (await imdb.getAllShowData('tt7286456', { episodes: false })) as Movie;
 });
 
@@ -32,8 +32,8 @@ describe('Joker is correctly scraped (EN)', () => {
     });
 
     test('Rating value and count are numbers', () => {
-        expect(movie.aggregateRating.ratingValue).not.toBeNaN();
-        expect(movie.aggregateRating.ratingCount).not.toBeNaN();
+        expect(movie.aggregateRating.ratingValue).toBeGreaterThanOrEqual(4.2);
+        expect(movie.aggregateRating.ratingCount).toBeGreaterThanOrEqual(1_000_000);
     });
 
     test('There are 12 recommendations and one is "The Dark Knight"', () => {

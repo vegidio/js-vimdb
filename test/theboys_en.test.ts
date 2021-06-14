@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Series } from '../src';
 
+jest.setTimeout(60_000);
 let series: Series;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('en', true);
+    const imdb = new Imdb('en-US', true);
     series = (await imdb.getAllShowData('tt1190634', { episodes: false })) as Series;
 });
 
@@ -42,7 +42,7 @@ describe('The Boys is correctly scraped (EN)', () => {
     });
 
     test('Genres are "Action", "Comedy", "Crime", "Sci-Fi"', () => {
-        expect(series.genre).toEqual(['Action', 'Comedy', 'Crime', 'Sci-Fi']);
+        expect(series.genre).toEqual(['Action', 'Crime', 'Drama']);
     });
 
     test('The content rating is TV-MA', () => {

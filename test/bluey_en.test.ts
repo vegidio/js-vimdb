@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Series } from '../src';
 
+jest.setTimeout(60_000);
 let series: Series;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('en', true);
+    const imdb = new Imdb('en-US', true);
     series = (await imdb.getAllShowData('tt7678620')) as Series;
 });
 
@@ -42,7 +42,7 @@ describe('Bluey is correctly scraped (EN)', () => {
     });
 
     test('Genres are "Animation", "Short" and "Family"', () => {
-        expect(series.genre).toEqual(['Animation', 'Short', 'Family']);
+        expect(series.genre).toEqual(['Animation', 'Family']);
     });
 
     test('The content rating is TV-Y', () => {
@@ -86,7 +86,7 @@ describe('Bluey is correctly scraped (EN)', () => {
 
     test('There are at least the actors Melanie and Charlotte', () => {
         expect(series.credits.cast).toContainEqual({ identifier: 'nm3148372', name: 'Melanie Zanetti' });
-        expect(series.credits.cast).toContainEqual({ identifier: 'nm6752942', name: 'Charlotte Stent' });
+        expect(series.credits.cast).toContainEqual({ identifier: 'nm3023739', name: 'Caitlin Hill' });
     });
 
     test('There are at least 2 seasons', () => {

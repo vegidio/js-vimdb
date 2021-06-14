@@ -1,11 +1,10 @@
 import Imdb from '../src';
 
+jest.setTimeout(60_000);
 let imdb: Imdb;
 
 beforeAll(async () => {
-    expect.assertions(1);
-    jest.setTimeout(60000);
-    imdb = new Imdb('en', true);
+    imdb = new Imdb('en-US', true);
 });
 
 describe('The series does not exist (EN)', () => {

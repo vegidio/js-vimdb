@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Movie } from '../src';
 
+jest.setTimeout(60_000);
 let movie: Movie;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    const imdb = new Imdb('pt-br', true);
+    const imdb = new Imdb();
     movie = (await imdb.getAllShowData('tt0194149')) as Movie;
 });
 

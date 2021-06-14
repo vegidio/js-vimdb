@@ -1,10 +1,10 @@
 import Imdb, { Reference } from '../src';
 
+jest.setTimeout(60_000);
 let imdb: Imdb;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
-    imdb = new Imdb('en', true);
+    imdb = new Imdb('en-US', true);
 });
 
 describe('Search for "Dragon Ball" (EN)', () => {
@@ -51,6 +51,7 @@ describe('Search for "Две девицы на мели" (EN)', () => {
     });
 
     test('One of the results is "Две девицы на мели"', () => {
-        expect(results).toContainEqual({ identifier: 'tt11715972', name: 'Dve devitsy na meli' });
+        expect(results).toContainEqual({ identifier: 'tt1845307', name: '2 Broke Girls' });
+        expect(results).toContainEqual({ identifier: 'tt11715972', name: '2 Broke Girls' });
     });
 });

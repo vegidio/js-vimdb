@@ -2,10 +2,10 @@ import fetch from 'node-fetch';
 import * as FileType from 'file-type';
 import Imdb, { Person } from '../src';
 
+jest.setTimeout(60_000);
 let person: Person;
 
 beforeAll(async () => {
-    jest.setTimeout(60000);
     const imdb = new Imdb('pt-br', true);
     person = await imdb.getPerson('nm0424060');
 });
@@ -53,7 +53,7 @@ describe('Scarlett Johansson is correctly scraped (EN)', () => {
         });
         expect(person.filmography.knownFor).toContainEqual({
             identifier: 'tt0848228',
-            name: 'The Avengers: Os Vingadores',
+            name: 'The Avengers - Os Vingadores',
         });
     });
 
