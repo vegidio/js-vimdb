@@ -1,3 +1,5 @@
+// noinspection JSMethodCanBeStatic
+
 import * as fs from 'fs';
 import * as path from 'path';
 import fetch, { Headers } from 'node-fetch';
@@ -9,6 +11,8 @@ import Series from '../models/series.model';
 import Person from '../models/person.model';
 import { EpisodeReference, Reference } from '../types';
 import { SearchType } from '../enums';
+
+import '../extensions/string';
 
 /**
  * @ignore
@@ -184,32 +188,31 @@ export default class ScraperService {
 
     // region - Show Info
     private scrapShowName($: cheerio.Root): string {
-        const el = $('div.title_wrapper > h1').html();
-        const name = el.includes('<span') ? el.match(/(.+)<span/)[1] : el.trim();
-        return decode(name).trim();
+        const value = $('h1[class^="TitleHeader"]').text();
+        return decode(value).trim();
     }
 
     private scrapAlternativeName($: cheerio.Root): string {
-        const el = $('div.originalTitle').html();
-        return el ? decode(el.match(/(.+)<span/)[1]) : undefined;
+        const value = $('div[class^="OriginalTitle"]').text().replace('Original title:', '');
+        return decode(value).trim();
     }
 
     private scrapSummary($: cheerio.Root): string {
-        const el = $('div.summary_text').html();
-        return !el || el.includes('<a') ? undefined : decode(el).trim();
+        const value = $('p[class^="GenresAndPlot__Plot"] > span').text();
+        return decode(value).trim();
     }
 
     private scrapDescription($: cheerio.Root): string {
-        const el = $('div#titleStoryLine').find('span:not([class])').html();
-        return el?.includes('|') ? undefined : decode(el).trim();
+        const value = $('div[data-testid="storyline-plot-summary"] > div > div').html();
+        return value.includes('<span') ? value.leftOf('<span') : value;
     }
 
     private scrapContentRating($: cheerio.Root): string {
-        const group = $('div.subtext')
-            .html()
-            .trim()
-            .match(/(.+)\n/);
-        return group && !group[1].includes('<a') && !group[1].includes('<time') ? group[1] : undefined;
+        const contentRating = $(
+            'div[class^="TitleBlock__TitleMetaDataContainer"] > ul > li:nth-child(3) > span',
+        ).text();
+
+        return contentRating.trim();
     }
 
     private scrapYear($: cheerio.Root): number {
@@ -257,14 +260,14 @@ export default class ScraperService {
 
     private scrapRecommended($: cheerio.Root): Reference[] {
         const shows: Reference[] = [];
-        $('div.rec_item').each((_, el) => {
-            let name = $(el).find('img').attr('title');
-            if (!name) name = $(el).find('div[class="gen_pane"]').text().trim();
+        $('div.ipc-sub-grid > div.ipc-poster-card').each((_, el) => {
+            const identifier = $(el)
+                .find('div > a')
+                .attr('href')
+                .match(/\/title\/(.+)\//)[1];
+            const name = $(el).find('div > a > span').text();
 
-            shows.push({
-                identifier: $(el).attr('data-tconst'),
-                name: name,
-            });
+            shows.push({ identifier, name });
         });
 
         return shows;
