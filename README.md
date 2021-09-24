@@ -4,7 +4,8 @@
 [![Codecov](https://img.shields.io/codecov/c/github/vegidio/js-vimdb)](https://codecov.io/gh/vegidio/js-vimdb)
 [![NPM Downloads](https://img.shields.io/npm/dt/vimdb.svg)](https://www.npmjs.com/package/vimdb)
 [![TypeScript](https://img.shields.io/npm/types/vimdb.svg)](https://www.typescriptlang.org)
-[![ISC License](https://img.shields.io/npm/l/vimdb?color=important)](LICENSE.txt)
+[![ESM](https://img.shields.io/badge/module-ESM-blueviolet.svg)](https://dev.to/bennypowers/you-should-be-using-esm-kn3)
+[![MIT License](https://img.shields.io/npm/l/vimdb?color=important)](LICENSE)
 
 This package lets you get IMDb information from movies, series, etc without an API key.
 
@@ -85,7 +86,7 @@ If you like this project then please consider [becoming a sponsor](https://githu
 
 ## 📝 License
 
-**vimdb** is released under the ISC License. See [LICENSE](LICENSE.txt) for details.
+**vimdb** is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## 👨🏾‍💻 Author
 
