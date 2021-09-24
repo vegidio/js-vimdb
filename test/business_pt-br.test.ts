@@ -1,5 +1,6 @@
+import { jest } from '@jest/globals';
 import fetch from 'node-fetch';
-import * as FileType from 'file-type';
+import FileType from 'file-type';
 import Imdb, { Series } from '../src';
 
 jest.setTimeout(60_000);

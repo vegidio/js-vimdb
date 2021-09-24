@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import Imdb, { Movie } from '../src';
 
 jest.setTimeout(60_000);

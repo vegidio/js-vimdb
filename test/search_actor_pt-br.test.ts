@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import Imdb, { Reference } from '../src';
 import { SearchType } from '../src/enums';
 

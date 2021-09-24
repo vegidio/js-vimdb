@@ -1,6 +1,8 @@
 export default {
     collectCoverage: true,
-    preset: 'ts-jest',
-    testEnvironment: 'node',
+    extensionsToTreatAsEsm: ['.ts'],
+    globals: { 'ts-jest': { useESM: true } },
     modulePathIgnorePatterns: ['<rootDir>/lib'],
+    preset: 'ts-jest/presets/default-esm',
+    testEnvironment: 'node',
 };
