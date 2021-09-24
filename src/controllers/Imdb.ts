@@ -16,6 +16,7 @@ type DataType = { main?: boolean; credits?: boolean; episodes?: boolean };
 
 /**
  * Represents an IMDb instance from where the data will be scraped.
+ *
  * @category Controller
  */
 export default class Imdb {

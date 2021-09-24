@@ -36,8 +36,8 @@ import Imdb from 'vimdb'
 const imdb = new Imdb()
 
 // Get the details of the show "The Simpsons"
-imdb.getShow('tt0096697')
-    .then(console.log)
+const show = await imdb.getShow('tt0096697')
+console.log(show)
 ```
 
 And the response should be something similar to this:
