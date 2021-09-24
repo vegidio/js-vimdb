@@ -1,19 +1,21 @@
 {
     "compilerOptions": {
         "allowJs": true,
-        "declaration": true,
-        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
         "experimentalDecorators": true,
         "jsx": "react",
         "lib": [ "ES2019" ],
-        "module": "CommonJS",
+        "module": "ESNext",
+        "moduleResolution": "Node",
         "noImplicitAny": true,
-        "outDir": "./lib/",
-        "sourceMap": true,
-        "target": "ES6"
+        "target": "ES2017",
+        "useDefineForClassFields": false
     },
+    "include": [
+        "src/**/*"
+    ],
     "exclude": [
-        "test",
-        "webpack.config.ts"
+        "test"
     ]
 }

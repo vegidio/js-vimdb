@@ -1,21 +1,19 @@
 {
     "name": "vimdb",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "ISC",
-    "main": "dist/vimdb.js",
-    "types": "dist/vimdb.d.ts",
-    "targets": {
-        "main": {
-            "context": "node",
-            "includeNodeModules": true
-        }
+    "type": "module",
+    "exports": "./dist/vimdb.js",
+    "types": "./dist/vimdb.d.ts",
+    "engines": {
+        "node" : ">=16.0.0"
     },
     "devDependencies": {
-        "@parcel/packager-ts": "2.0.0-nightly.845",
-        "@parcel/transformer-typescript-tsc": "2.0.0-nightly.845",
-        "@parcel/transformer-typescript-types": "2.0.0-nightly.845",
+        "@rollup/plugin-commonjs": "20.0.0",
+        "@rollup/plugin-json": "4.1.0",
+        "@rollup/plugin-node-resolve": "13.0.5",
         "@types/cheerio": "0.22.30",
         "@types/jest": "27.0.2",
         "@types/luxon": "2.0.4",
@@ -32,17 +30,21 @@
         "jest": "27.2.1",
         "luxon": "2.0.2",
         "node-fetch": "2.6.5",
-        "parcel": "2.0.0-nightly.843",
         "prettier": "2.4.1",
+        "rollup": "2.57.0",
+        "rollup-plugin-dts": "4.0.0",
+        "rollup-plugin-terser": "7.0.2",
+        "rollup-plugin-typescript2": "0.30.0",
         "ts-jest": "27.0.5",
         "ts-node": "10.2.1",
-        "typedoc": "^0.22.4",
+        "typedoc": "0.22.4",
         "typescript": "4.4.3"
     },
     "scripts": {
+        "build": "rollup --config",
         "docs": "typedoc --options typedoc.json --disableSources",
-        "build": "parcel build src/index.ts --no-source-maps --no-scope-hoist --no-cache",
         "lint": "eslint . --fix --ext .ts",
+        "start": "node --loader ts-node/esm --experimental-specifier-resolution=node --trace-warnings src/index.ts",
         "test": "jest"
     },
     "repository": {
