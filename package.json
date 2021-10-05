@@ -1,11 +1,11 @@
 {
     "name": "vimdb",
-    "version": "4.0.2",
+    "version": "4.0.3",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "MIT",
     "type": "module",
-    "exports": "./dist/vimdb.js",
+    "main": "./dist/vimdb.js",
     "types": "./dist/vimdb.d.ts",
     "engines": {
         "node": ">=16.0.0"
