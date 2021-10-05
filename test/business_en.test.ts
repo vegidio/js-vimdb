@@ -33,7 +33,7 @@ describe('The Business is correctly scraped (EN)', () => {
     });
 
     test('Duration is 51 minutes', () => {
-        expect(series.duration).toEqual(51);
+        expect(series.duration).toEqual(47);
     });
 
     test('Rating value and count are numbers', () => {

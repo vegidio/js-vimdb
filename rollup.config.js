@@ -8,7 +8,7 @@ import { terser } from 'rollup-plugin-terser';
 export default [
     {
         input: 'src/index.ts',
-        plugins: [commonjs(), typescript(), terser(), nodeResolve({ preferBuiltins: true }), json()],
+        plugins: [typescript(), commonjs(), nodeResolve({ preferBuiltins: true }), terser(), json()],
         output: [
             {
                 file: 'dist/vimdb.js',
