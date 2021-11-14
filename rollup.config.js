@@ -8,6 +8,7 @@ import { terser } from 'rollup-plugin-terser';
 export default [
     {
         input: 'src/index.ts',
+        inlineDynamicImports: true,
         plugins: [typescript(), commonjs(), nodeResolve({ preferBuiltins: true }), terser(), json()],
         output: [
             {
