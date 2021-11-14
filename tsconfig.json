@@ -5,7 +5,7 @@
         "declaration": false,
         "experimentalDecorators": true,
         "jsx": "react",
-        "lib": [ "ES2019" ],
+        "lib": [ "ES2021" ],
         "module": "ESNext",
         "moduleResolution": "Node",
         "noImplicitAny": true,

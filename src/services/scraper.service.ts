@@ -223,8 +223,13 @@ export default class ScraperService {
     }
 
     private scrapDuration($: cheerio.Root): number {
-        let value = $('li[data-testid="title-techspec_runtime"] > div > ul > li > span').text();
-        value = 'PT' + value.replace('h', 'H').replace('min', 'M').replace(' ', '');
+        let value = $('li[data-testid="title-techspec_runtime"] > div').text();
+        value =
+            'PT' +
+            value
+                .replace(/hour(s)?/g, 'H')
+                .replace(/minute(s)?/, 'M')
+                .replaceAll(' ', '');
         return Duration.fromISO(value).as('minutes');
     }
 
