@@ -37,7 +37,7 @@ jobs:
           export TAG=$(semver -i $(node -p "require('./package').version"))
           echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
-          if ! ncu -u -e 2; then
+          if ! ncu -x file-type -u -e 2; then
             yarn version --no-commit-hooks --no-git-tag-version --new-version $TAG
             git add package.json
             git commit -m "⬆️ Upgraded NPM packages"
