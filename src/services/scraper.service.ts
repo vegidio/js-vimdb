@@ -5,7 +5,7 @@ import * as path from 'path';
 import fetch, { Headers } from 'node-fetch';
 import * as cheerio from 'cheerio';
 import { decode } from 'html-entities';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 
 import Movie from '../models/movie.model';
 import Series from '../models/series.model';
@@ -31,24 +31,27 @@ export default class ScraperService {
 
     async fetchShowInfo(identifier: string): Promise<Movie | Series> {
         // Setup the variables needed for fetch
-        const [$, show] = await this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}`);
-        if (!show) throw Error("Failed to get the show's info.");
+        const [$main, show, $tech] = await Promise.all([
+            this.setupFetchShow(identifier, `https://www.imdb.com/title/${identifier}`),
+            this.setupFetchTechnical(identifier, `https://www.imdb.com/title/${identifier}/technical`),
+        ]).then((res) => res.flat() as [cheerio.Root, Movie | Series, cheerio.Root]);
 
-        const json = JSON.parse($('script[type="application/ld+json"]').html());
+        if (!show) throw Error("Failed to get the show's info.");
+        const json = JSON.parse($main('script[type="application/ld+json"]').html());
 
         show.identifier = identifier;
         show.url = `https://www.imdb.com/title/${identifier}`;
-        show.name = this.scrapShowName($);
-        show.alternativeName = this.scrapAlternativeName($);
+        show.name = this.scrapShowName($main);
+        show.alternativeName = this.scrapAlternativeName($main);
         show.summary = this.scrapSummary(json);
-        show.description = this.scrapDescription($);
+        show.description = this.scrapDescription($main);
         show.contentRating = this.scrapContentRating(json);
         show.year = this.scrapYear(json);
-        show.duration = this.scrapDuration($);
+        show.duration = this.scrapDuration($tech);
         show.aggregateRating = this.scrapRating(json);
         show.genre = this.scrapGenre(json);
-        show.image = this.scrapShowImages($);
-        show.recommended = this.scrapRecommended($);
+        show.image = this.scrapShowImages($main);
+        show.recommended = this.scrapRecommended($main);
 
         return show;
     }
@@ -159,6 +162,10 @@ export default class ScraperService {
         return [$, show];
     }
 
+    private async setupFetchTechnical(identifier: string, url: string): Promise<cheerio.Root> {
+        return await this.setupFetch(identifier, url);
+    }
+
     private async setupFetchPerson(identifier: string, url: string): Promise<[cheerio.Root, Person]> {
         const $ = await this.setupFetch(identifier, url);
         if (!$) return [undefined, undefined];
@@ -196,7 +203,8 @@ export default class ScraperService {
     }
 
     private scrapAlternativeName($: cheerio.Root): string {
-        const value = $('div[class^="OriginalTitle"]').text().replace('Original title:', '');
+        let value = $('div[class^="OriginalTitle"]').text();
+        if (value.includes(': ')) value = value.rightOf(': ');
         return value ? decode(value).trim() : undefined;
     }
 
@@ -223,14 +231,20 @@ export default class ScraperService {
     }
 
     private scrapDuration($: cheerio.Root): number {
-        let value = $('li[data-testid="title-techspec_runtime"] > div').text();
-        value =
-            'PT' +
-            value
-                .replace(/hour(s)?/g, 'H')
-                .replace(/minute(s)?/, 'M')
-                .replaceAll(' ', '');
-        return Duration.fromISO(value).as('minutes');
+        let duration = 0;
+
+        $('#technical_content > table > tbody > tr > td.label')
+            .filter((_, el) => $(el).text().includes('Runtime'))
+            .next('td')
+            .each((_, el) => {
+                duration = Number(
+                    $(el)
+                        .text()
+                        .match(/([0-9]+)(?!.*[0-9]+)/gm)[0],
+                );
+            });
+
+        return duration;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

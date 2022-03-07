@@ -47,7 +47,7 @@ describe('Joker is correctly scraped (PT-BR)', () => {
     });
 
     test('Genres are "Crime", "Drama" and "Thriller"', () => {
-        expect(movie.genre).toEqual(['Crime', 'Drama', 'Thriller']);
+        expect(movie.genre).toEqual(['Policial', 'Drama', 'Suspense']);
     });
 
     test('The content rating is R', () => {

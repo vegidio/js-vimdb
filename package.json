@@ -1,6 +1,6 @@
 {
     "name": "vimdb",
-    "version": "4.0.8",
+    "version": "4.0.6",
     "description": "Yet another IMDb Scraper",
     "author": "Vinicius Egidio <me@vinicius.io>",
     "license": "MIT",
@@ -43,7 +43,7 @@
         "build": "rollup --config",
         "docs": "typedoc --options typedoc.json --disableSources",
         "lint": "eslint . --fix --ext .ts",
-        "start": "node --loader ts-node/esm --experimental-specifier-resolution=node --trace-warnings src/index.ts",
+        "start": "node --loader ts-node/esm --es-module-specifier-resolution=node --trace-warnings src/index.ts",
         "test": "node --experimental-vm-modules node_modules/.bin/jest"
     },
     "repository": {

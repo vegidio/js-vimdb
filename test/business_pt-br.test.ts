@@ -21,7 +21,7 @@ describe('O Negócio is correctly scraped (PT-BR)', () => {
     });
 
     test('Summary is correct', () => {
-        expect(series.summary).toContain('Karin, Magali and Luna are three call girls');
+        expect(series.summary).toContain('A Karin, a Magali e a Luna são três garotas');
     });
 
     test('Description is correct', () => {
@@ -37,13 +37,13 @@ describe('O Negócio is correctly scraped (PT-BR)', () => {
         expect(series.aggregateRating.ratingCount).toBeGreaterThan(1_000);
     });
 
-    test('There are 12 recommendations and one is "Magnífica 70"', () => {
+    test('There are 12 recommendations and one is "Me Chama de Bruna"', () => {
         expect(series.recommended.length).toEqual(12);
-        expect(series.recommended).toContainEqual({ identifier: 'tt4725820', name: 'Magnífica 70' });
+        expect(series.recommended).toContainEqual({ identifier: 'tt5210146', name: 'Me Chama de Bruna' });
     });
 
-    test('Genres are "Comedy" and "Drama"', () => {
-        expect(series.genre).toEqual(['Comedy', 'Drama']);
+    test('Genres are "Comédia" and "Drama"', () => {
+        expect(series.genre).toEqual(['Comédia', 'Drama']);
     });
 
     test('The content rating is 16', () => {

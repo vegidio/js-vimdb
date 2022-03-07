@@ -47,7 +47,7 @@ describe('Os Simpsons is correctly scraped (PT-BR)', () => {
     });
 
     test('Genres are "Animation" and "Comedy"', () => {
-        expect(series.genre).toEqual(['Animation', 'Comedy']);
+        expect(series.genre).toEqual(['Animação', 'Comédia']);
     });
 
     test('The content rating is 12', () => {

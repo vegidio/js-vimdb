@@ -41,9 +41,9 @@ describe('The Business is correctly scraped (EN)', () => {
         expect(series.aggregateRating.ratingCount).toBeGreaterThan(1_000);
     });
 
-    test('There are 12 recommendations and one is "Magnífica 70"', () => {
+    test('There are 12 recommendations and one is "Call Me Bruna"', () => {
         expect(series.recommended.length).toEqual(12);
-        expect(series.recommended).toContainEqual({ identifier: 'tt4725820', name: 'Magnífica 70' });
+        expect(series.recommended).toContainEqual({ identifier: 'tt5210146', name: 'Call Me Bruna' });
     });
 
     test('Genres are "Comedy" and "Drama"', () => {
