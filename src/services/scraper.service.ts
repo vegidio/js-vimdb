@@ -214,7 +214,8 @@ export default class ScraperService {
     }
 
     private scrapDescription($: cheerio.Root): string {
-        return $('p[data-testid="plot"] span').first().text();
+        const value = $('div[data-testid="storyline-plot-summary"] > div > div').html();
+        return value?.includes('<span') ? value.leftOf('<span') : value;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
