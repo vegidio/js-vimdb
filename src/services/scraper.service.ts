@@ -198,7 +198,7 @@ export default class ScraperService {
 
     // region - Show Info
     private scrapShowName($: cheerio.Root): string {
-        const value = $('h1[class^="TitleHeader"]').text();
+        const value = $('h1[data-testid="hero__pageTitle"]').text();
         return decode(value).trim();
     }
 
